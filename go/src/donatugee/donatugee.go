@@ -81,7 +81,7 @@ func NewDonatugee(dbname string) (*Donatugee, error) {
 
 func (d *Donatugee) Techfugees() ([]Techfugee, []error) {
 	var techfugees []Techfugee
-	errs := d.db.Preload("Application").Find(&techfugees).GetErrors()
+	errs := d.db.Preload("Applications").Find(&techfugees).GetErrors()
 	return techfugees, errs
 
 }
@@ -110,7 +110,7 @@ func (d *Donatugee) Challenges() ([]Challenge, []error) {
 func (d *Donatugee) Techfugee(id string) (Techfugee, []error) {
 	var techfugee Techfugee
 	newID, _ := strconv.Atoi(id)
-	errs := d.db.Preload("Application").First(&techfugee, "id = ?", newID).GetErrors()
+	errs := d.db.Preload("Applications").First(&techfugee, "id = ?", newID).GetErrors()
 	return techfugee, errs
 }
 
