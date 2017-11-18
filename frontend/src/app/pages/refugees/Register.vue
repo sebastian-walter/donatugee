@@ -2,7 +2,7 @@
     <div>
         <v-flex xs12>
             <h1>
-                Register
+                Sign up
             </h1>
             <v-form v-model="valid">
                 <v-text-field
@@ -17,6 +17,15 @@
                         :rules="emailRules"
                         required
                 ></v-text-field>
+                <v-btn class="sign-up-button"
+                       small
+                       color="primary"
+                       dark
+                       large
+                       @click="signUp"
+                >
+                    Sign up
+                </v-btn>
             </v-form>
         </v-flex>
     </div>
@@ -39,8 +48,15 @@
 				]
 			}
 		},
-		mounted() {
+        methods: {
+			signUp() {
 
-		},
+            }
+        }
 	};
 </script>
+<style lang="scss" type="text/scss">
+    .sign-up-button {
+        width: 100%;
+    }
+</style>
