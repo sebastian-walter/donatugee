@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 	"os"
+	"flag"
 )
 
 type Server struct {
@@ -17,16 +18,50 @@ func NewServer(donatugee *Donatugee) *Server {
 		donatugee: donatugee,
 	}
 
-	http.HandleFunc("/challenges", s.challenges)
 	return s
 }
 
 func (s *Server) start() error {
-	addr := ":8081"
+	addr := "8081"
 	if os.Getenv("ENV") == "production" {
-		addr = fmt.Sprintf(":%s",os.Getenv("PORT"))
+		addr = os.Getenv("PORT")
 	}
-	return http.ListenAndServe(addr, nil)
+
+	r := mux.NewRouter()
+
+	// Note: In a larger application, we'd likely extract our route-building logic into our handlers
+	// package, given the coupling between them.
+
+	// It's important that this is before your catch-all route ("/")
+	api := r.PathPrefix("/api/v1/").Subrouter()
+	api.HandleFunc("/challenges", challenges).Methods("GET")
+	// Optional: Use a custom 404 handler for our API paths.
+	// api.NotFoundHandler = JSONNotFound
+
+	// Serve static assets directly.
+	r.PathPrefix("/dist").Handler(http.FileServer(http.Dir("../frontend/dist")))
+
+	// Catch-all: Serve our JavaScript application's entry-point (index.html).
+	r.PathPrefix("/").HandlerFunc(IndexHandler("../frontend/index.html"))
+
+	srv := &http.Server{
+		Handler: handlers.LoggingHandler(os.Stdout, r),
+		Addr:    "127.0.0.1:" + addr,
+		// Good practice: enforce timeouts for servers you create!
+		WriteTimeout: 15 * time.Second,
+		ReadTimeout:  15 * time.Second,
+	}
+
+
+	return srv.ListenAndServe()
+}
+
+func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request) {
+	fn := func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, entrypoint)
+	}
+
+	return http.HandlerFunc(fn)
 }
 
 func (s *Server) challenges(resp http.ResponseWriter, r *http.Request) {
