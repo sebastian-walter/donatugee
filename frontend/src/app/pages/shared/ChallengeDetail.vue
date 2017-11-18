@@ -22,8 +22,9 @@
         </v-card>
 
         <v-btn v-if="!userId" class="mb-4" @click="handleSignUp()" color="primary">Sign up</v-btn>
-        <v-btn v-if="userId" class="mb-4" @click="handleApply()" color="primary">Apply</v-btn>
-        <v-btn v-if="userId && donator.Applications" class="mb-4" color="primary" disabled>Already applied</v-btn>
+        <v-btn v-if="!userId" class="mb-4" @click="handleLogin()" color="primary">Login</v-btn>
+        <v-btn v-if="userId && !applied" class="mb-4" @click="handleApply()" color="primary">Apply</v-btn>
+        <v-btn v-if="userId && applied" class="mb-4" disabled>Already applied</v-btn>
 
         <v-card>
             <v-card-title>
@@ -53,7 +54,7 @@
         data() {
     		return {
     		    idChallenge: this.$route.params.id,
-                challenge: {},
+                challenge: { Applications: [] },
                 donator: {},
                 randomText: '',
 
@@ -81,8 +82,22 @@
                 });
             },
 
+            handleLogin() {
+                window.localStorage.setItem('idChallenge', this.idChallenge);
+                this.$router.push({
+                    path: '/refugee/login'
+                });
+            },
+
             handleApply() {
-                setApplication(this.challenge.ID, this.donator.ID);
+                setApplication(this.challenge.ID, this.userId);
+            }
+        },
+        computed: {
+            applied() {
+                return this.challenge.Applications.filter((application) => {
+                    return application.TechfugeeID === parseInt(this.userId);
+                }).length > 0;
             }
         }
     }
