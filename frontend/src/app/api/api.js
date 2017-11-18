@@ -27,6 +27,14 @@ export const getChallenges = () => {
   return HTTPS.get('challenges').then(response => response).catch(error => error.response);
 };
 
+export const getChallengeForTechfugee = (id) => {
+	return HTTPS.get('application-by-techfugee', {
+		params: {
+			id
+		}
+	}).then(response => response).catch(error => error.response);
+};
+
 export const getChallenge = (id) => {
 	return HTTPS.get('challenge', {
 		params: {

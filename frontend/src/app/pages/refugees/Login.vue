@@ -74,9 +74,14 @@
 						this.errorMessage = 'User cannot be created';
 					}
 
-					const authenticated = JSON.parse(response.data.Authenticated);
-
 					debugger;
+					let authenticated;
+					if (response.data.Authenticated === '') {
+                        authenticated = false
+                    } else {
+						authenticated = JSON.parse(response.data.Authenticated);
+                    }
+
 					window.localStorage.setItem('userId', response.data.ID);
 					window.localStorage.setItem('email', response.data.Email);
 					window.localStorage.setItem('name', response.data.Name);

@@ -3,6 +3,7 @@ import Vue from 'vue';
 import { maxNumberOfIncorrectAnswers } from '../library/questions';
 import Home from '../app/pages/shared/Home.vue';
 import ChallengeList from '../app/pages/shared/ChallengeList.vue';
+import YourChallengeList from '../app/pages/refugees/YourChallengeList.vue';
 import ChallengeDetail from '../app/pages/shared/ChallengeDetail.vue';
 import RefugeeProfile from '../app/pages/refugees/Profile.vue';
 import CompanyProfile from '../app/pages/companies/Profile.vue';
@@ -27,6 +28,10 @@ const routes = [
 	{
 		path: '/challenges',
 		component: ChallengeList,
+	},
+	{
+		path: '/your-challenges',
+		component: YourChallengeList,
 	},
 	{
 		path: '/challenge/:id',

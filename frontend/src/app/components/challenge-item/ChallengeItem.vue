@@ -1,5 +1,5 @@
 <template>
-    <div class="mb-4">
+    <div class="mb-4 challenge-item">
         <v-flex xs12>
             <v-card :to="{ path: 'challenge/' + challenge.ID }" :class="applied">
                 <v-card-title>
@@ -56,6 +56,9 @@
         },
         computed: {
             applied() {
+            	if (this.$route.path === '/your-challenges') {
+            		return true;
+                }
                 return (this.challenge.Applications.filter((application) => {
                     return application.TechfugeeID === parseInt(this.userId);
                 }).length > 0) ? 'applied' : '';

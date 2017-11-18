@@ -7,7 +7,10 @@
 
         <v-card class="mb-4">
             <v-card-title>
-                <h3 class="title mb-2">What you will get</h3>
+                <h3 class="title mb-2 display-1">What you will get</h3>
+            </v-card-title>
+            <v-divider></v-divider>
+            <v-card-text>
                 <div>
                     <v-chip color="orange" text-color="white">
                         <v-icon left>laptop</v-icon>
@@ -18,7 +21,7 @@
                         Udemy
                     </v-chip>
                 </div>
-            </v-card-title>
+            </v-card-text>
         </v-card>
 
         <v-btn v-if="!userId" class="mb-4" @click="handleSignUp()" color="primary">Sign up</v-btn>
@@ -50,14 +53,14 @@
     import { getChallenge, getDonator, getRandomText, setApplication } from '../../api/api';
 
     export default {
-    	name: 'ChallengeDetail',
+		name: 'ChallengeDetail',
         data() {
     		return {
     		    idChallenge: this.$route.params.id,
                 challenge: { Applications: [] },
                 donator: {},
                 randomText: '',
-
+                hasApplied: false,
                 userId: window.localStorage.getItem('userId')
             }
         },
@@ -90,11 +93,19 @@
             },
 
             handleApply() {
-                setApplication(this.challenge.ID, this.userId);
+                setApplication(this.challenge.ID, this.userId).then(
+                	response => {
+                	    this.hasApplied = true;
+                    }
+                );
             }
         },
         computed: {
             applied() {
+            	if (this.hasApplied) {
+            		return true;
+                }
+
                 return this.challenge.Applications.filter((application) => {
                     return application.TechfugeeID === parseInt(this.userId);
                 }).length > 0;

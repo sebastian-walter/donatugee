@@ -52,7 +52,6 @@
                     introduction: this.description
     			}).then(response => {
     				if (response.status === 200) {
-    					debugger;
     					let idChallenge = window.localStorage.getItem('idChallenge');
     					if (idChallenge !== null) {
 							this.$router.push({

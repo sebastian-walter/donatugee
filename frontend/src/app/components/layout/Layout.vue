@@ -33,7 +33,7 @@
         <v-content>
             <v-container fluid fill-height>
                 <v-layout row>
-                    <v-flex xs12>
+                    <v-flex xs12 class="app-container">
                         <slot name="content"></slot>
                     </v-flex>
                 </v-layout>
@@ -45,7 +45,7 @@
                 <span>Home</span>
                 <v-icon>home</v-icon>
               </v-btn>
-              <v-btn :class="getClass('/challenges')" :to="{path:'/challenges'}" flat color="primary">
+              <v-btn :class="getClass('/challenges')" :to="{path:'/your-challenges'}" flat color="primary">
                 <span>Your Challenges</span>
                 <v-icon>star</v-icon>
               </v-btn>
@@ -105,3 +105,8 @@
         }
 	};
 </script>
+<style lang="scss" type="text/scss">
+    .app-container {
+        margin-bottom: 2.5rem;
+    }
+</style>

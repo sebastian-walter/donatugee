@@ -43,6 +43,14 @@
 				techfugee: {type: Object, required: true},
 			};
 		},
+		computed: {
+			skills() {
+				if (this.techfugee.Skills === '' || typeof this.techfugee.Skills === 'undefined' || this.techfugee === null) {
+					return [];
+				}
+				return JSON.parse(this.techfugee.Skills);
+			},
+		},
 		mounted() {
 			getTechfugee(this.id).then(response => {
 				this.techfugee = response.data;

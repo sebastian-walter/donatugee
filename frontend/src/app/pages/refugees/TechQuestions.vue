@@ -126,8 +126,6 @@
                     passed: true
 				}).then(response => {
 					if (response.status === 200) {
-						debugger;
-
 						if (!hasFurtherDetails()) {
 							return this.$router.push({
 								path: '/refugee/further-details',
