@@ -1,35 +1,37 @@
 <template>
     <div>
-        <h1>ChallengeList </h1>
-        <v-flex xs12>
-            <v-card>
-                <v-card-title>
-                    <div>
-                        <h3 class="headline mb-0">Challenge Headline</h3>
-                        <p>Description</p>
-                    </div>
-                </v-card-title>
-                <v-card-title primary-title>
-                    <v-flex xs2>
-                        <v-avatar
-                                :tile="tile"
-                                :size="avatarSize"
-                                class="grey lighten-4"
-                        >
-                            <img src="/static/apple-touch-icon-180x180.png" alt="avatar">
-                        </v-avatar>
-                    </v-flex>
-                    <v-flex xs10 class="pt-0">
-                        <h3 class="mb-0">Trivago</h3>
-                        <div>Location</div>
-                    </v-flex>
-                </v-card-title>
-            </v-card>
-        </v-flex>
+        <h1>Discover Challenges</h1>
+        <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,</p>
+        <challenge-item></challenge-item>
+        <challenge-item></challenge-item>
     </div>
 </template>
 <script>
+    import axios from 'axios';
+    import ChallengeItem from '../../components/challenge-item/ChallengeItem.vue';
+
     export default {
-    	name: 'ChallengeList'
+    	name: 'ChallengeList',
+        data() {
+            return {
+                challenges
+            };
+        },
+        mounted() {
+            axios.get('')
+                .then(response => {
+                this.challenges = response.data
+            })
+            .catch(e => {
+                console.error(e);
+            })
+        },
+        methods: {
+
+        },
+        components: {
+            ChallengeItem
+            axios
+        }
     }
 </script>
