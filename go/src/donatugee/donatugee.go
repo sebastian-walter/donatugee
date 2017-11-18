@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"strconv"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -140,4 +142,20 @@ func (d *Donatugee) IntializeDB() []error {
 	}
 
 	return nil
+}
+
+func (d *Donatugee) InsertChallenge(idDonator, name, description string) (Challenge, []error) {
+	id, err := strconv.ParseUint(idDonator, 10, 64)
+	if err != nil {
+		return Challenge{}, []error{err}
+	}
+
+	challenge := Challenge{
+		DonatorID:   uint(id),
+		Name:        name,
+		Description: description,
+	}
+
+	errs := d.db.Create(&challenge).GetErrors()
+	return challenge, errs
 }

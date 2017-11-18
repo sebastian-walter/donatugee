@@ -52,6 +52,26 @@ func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request
 	return http.HandlerFunc(fn)
 }
 
+func (s *Server) insertChallenge(resp http.ResponseWriter, r *http.Request) {
+	idDonator := r.FormValue("id_donator")
+	name := r.FormValue("name")
+	description := r.FormValue("description")
+
+	challenge, errs := s.donatugee.InsertChallenge(idDonator, name, description)
+	if len(errs) > 0 {
+		http.Error(resp, fmt.Sprintf("insert: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(challenge)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	_, _ = resp.Write(js)
+}
+
 func (s *Server) updateAuth(resp http.ResponseWriter, r *http.Request) {
 	id := r.FormValue("id")
 	passed := r.FormValue("passed")
