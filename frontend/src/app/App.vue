@@ -28,3 +28,5 @@
 		}
 	}
 </script>
+
+<style lang="scss" type="text/scss">@import '../assets/index.scss';</style>
