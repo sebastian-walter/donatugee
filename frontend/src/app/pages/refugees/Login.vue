@@ -76,6 +76,7 @@
 
 					const authenticated = JSON.parse(response.data.Authenticated);
 
+					debugger;
 					window.localStorage.setItem('userId', response.data.ID);
 					window.localStorage.setItem('email', response.data.Email);
 					window.localStorage.setItem('name', response.data.Name);

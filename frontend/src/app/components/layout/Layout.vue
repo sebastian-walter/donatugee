@@ -49,7 +49,7 @@
                 <span>Your Challenges</span>
                 <v-icon>star</v-icon>
               </v-btn>
-              <v-btn v-if="refugeeId" :class="getClass('/refugee/profile/')" :to="{path:'/refugee/profile/' + refugeeId}" flat color="primary">
+              <v-btn v-if="showRefugeeProfile" :class="getClass('/refugee/profile/')" :to="{path:'/refugee/profile/' + refugeeId}" flat color="primary">
                 <span>Profile</span>
                 <v-icon>person</v-icon>
               </v-btn>
@@ -78,11 +78,6 @@
                 }
                 return classes;
             },
-        },
-		props: {
-			source: String,
-		},
-        methods: {
 			logout() {
 				window.localStorage.removeItem('idChallenge');
 				window.localStorage.removeItem('userId');
@@ -94,6 +89,18 @@
 				this.$router.push({
                     path: '/',
                 });
+            }
+        },
+		props: {
+			source: String,
+		},
+        computed: {
+			showRefugeeProfile() {
+				if (window.localStorage.getItem('userId') !== null && window.localStorage.getItem('userId') !==
+                    undefined) {
+					return true;
+                }
+                return false;
             }
         }
 	};
