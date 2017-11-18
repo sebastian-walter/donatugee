@@ -103,7 +103,7 @@ func (d *Donatugee) UpdateAuth(id string, passed string) (Techfugee, []error) {
 
 func (d *Donatugee) Challenges() ([]Challenge, []error) {
 	var challenges []Challenge
-	errs := d.db.Preload("Applications").Preload("Applications.Techfugees").Find(&challenges).GetErrors()
+	errs := d.db.Preload("Applications").Find(&challenges).GetErrors()
 	return challenges, errs
 }
 
@@ -121,7 +121,7 @@ func (d *Donatugee) Challenge(id string) (Challenge, []error) {
 		return Challenge{}, []error{err}
 	}
 
-	errs := d.db.Preload("Applications").Preload("Applications.Techfugees").First(&challenge, "id = ?", newID).GetErrors()
+	errs := d.db.Preload("Applications").First(&challenge, "id = ?", newID).GetErrors()
 	return challenge, errs
 }
 
