@@ -176,7 +176,7 @@ func (d *Donatugee) InsertApplication(techfugee, challenge string) (Application,
 	newID2, _ := strconv.Atoi(challenge)
 
 	var applications []Application
-	errs := d.db.Find(&applications, "techfugee_id = ? AND challenge_id = ?").GetErrors()
+	errs := d.db.Find(&applications, "techfugee_id = ? AND challenge_id = ?", newID1, newID2).GetErrors()
 	if len(errs) > 0 {
 		return Application{}, errs
 	}
