@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+	"os"
 )
 
 type Server struct {
@@ -21,7 +22,11 @@ func NewServer(donatugee *Donatugee) *Server {
 }
 
 func (s *Server) start() error {
-	return http.ListenAndServe(":8081", nil)
+	addr := ":8081"
+	if os.Getenv("ENV") == "production" {
+		addr := ":80"
+	}
+	return http.ListenAndServe(addr, nil)
 }
 
 func (s *Server) challenges(resp http.ResponseWriter, r *http.Request) {
