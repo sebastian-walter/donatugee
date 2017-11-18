@@ -34,3 +34,11 @@ export const getChallenge = (id) => {
 		}
 	}).then(response => response).catch(error => error.response);
 };
+
+export const getTechfugee = (id) => {
+	return HTTPS.get('techfugee', {
+		params: {
+			id,
+		}
+	}).then(response => response).catch(error => error.response);
+};
