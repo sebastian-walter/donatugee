@@ -214,7 +214,7 @@ func (s *Server) techfugee(resp http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) loginTechfugee(resp http.ResponseWriter, r *http.Request) {
-	id := r.FormValue("email")
+	email := r.FormValue("email")
 
 	techfugee, errs := s.donatugee.LoginTechfugee(email)
 	if len(errs) != 0 {
