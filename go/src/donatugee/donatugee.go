@@ -172,24 +172,22 @@ func (d *Donatugee) InsertTechfugee(name, email, skills string) (Techfugee, []er
 }
 
 func (d *Donatugee) InsertApplication(techfugee, challenge string) (Application, []error) {
-
 	newID1, _ := strconv.Atoi(techfugee)
 	newID2, _ := strconv.Atoi(challenge)
 
-	application := Application{
-		TechfugeeID: uint(newID1),
-		ChallengeID: uint(newID2),
-	}
-
 	var applications []Application
-
-	errs := d.db.Where(&application, "techfugee_id = ? AND challenge_id = ?", newID1, newID2).Find(&applications).GetErrors()
+	errs := d.db.Find(&applications, "techfugee_id = ? AND challenge_id = ?").GetErrors()
 	if len(errs) > 0 {
-		return application, errs
+		return Application{}, errs
 	}
 
 	if len(applications) > 0 {
 		return applications[0], []error{fmt.Errorf("exists already")}
+	}
+
+	application := Application{
+		TechfugeeID: uint(newID1),
+		ChallengeID: uint(newID2),
 	}
 
 	return application, d.db.Create(&application).GetErrors()
