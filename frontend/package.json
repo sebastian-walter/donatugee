@@ -13,6 +13,7 @@
     "vuetify": "^0.17.1"
   },
   "devDependencies": {
+    "axios": "^0.17.1",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.0",
@@ -26,6 +27,7 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.1",
     "vue-loader": "^13.0.5",
+    "vue-router": "^3.0.1",
     "vue-template-compiler": "^2.5.3",
     "webpack": "^3.6.0",
     "webpack-dev-server": "^2.9.1"

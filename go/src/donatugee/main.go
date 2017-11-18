@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
@@ -20,6 +21,6 @@ func main() {
 	s := NewServer(d)
 	err = s.start()
 	if err != nil {
-		panic(s)
+		panic(err)
 	}
 }

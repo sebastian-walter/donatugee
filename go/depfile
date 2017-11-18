@@ -1,0 +1,3 @@
+github.com/gorilla/handlers tag=master
+github.com/gorilla/mux tag=master
+github.com/jinzhu/gorm tag=master

@@ -3,6 +3,9 @@ package main
 import (
 	"time"
 
+	"fmt"
+	"os"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -54,18 +57,34 @@ type Donatugee struct {
 	db *gorm.DB
 }
 
+func OpenDatabase(dbname string) (db *gorm.DB, err error) {
+	if os.Getenv("ENV") == "production" {
+		db, err := gorm.Open("postgres",
+			fmt.Sprintf("host=%s user=%s dbname=%s sslmode=require password=%s",
+				os.Getenv("P_HOST"),
+				os.Getenv("P_USER"),
+				os.Getenv("P_DB"),
+				os.Getenv("P_PW")))
+		return db, err
+	} else {
+		db, err := gorm.Open("sqlite3", dbname)
+		db.Exec("PRAGMA foreign_keys = ON;")
+		return db, err
+	}
+}
+
 func NewDonatugee(dbname string) (*Donatugee, error) {
-	db, err := gorm.Open("sqlite3", dbname)
-	db.Exec("PRAGMA foreign_keys = ON;")
+	db, err := OpenDatabase(dbname)
 	if err != nil {
 		return nil, err
 	}
+	db.AutoMigrate(&Donatugee{})
 	return &Donatugee{
 		db: db,
 	}, nil
 }
 
-func (d *Donatugee) GetChallenges() ([]Challenge, error) {
+func (d *Donatugee) Challenges() ([]Challenge, error) {
 	return []Challenge{}, nil
 }
 
