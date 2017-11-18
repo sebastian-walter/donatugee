@@ -31,7 +31,7 @@ func (s *Server) start() error {
 
 	mux.HandleFunc("/api/v1/challenges", s.challenges)
 	mux.HandleFunc("/api/v1/insert-techfugee", s.insertTechfugee)
-	mux.HandleFunc("/api/v1/insert-donator", s.InsertDonator)
+	mux.HandleFunc("/api/v1/insert-donator", s.insertDonator)
 	mux.HandleFunc("/api/v1/techfugees", s.techfugees)
 	mux.HandleFunc("/api/v1/techfugee", s.techfugee)
 	mux.HandleFunc("/api/v1/challenge", s.challenge)
@@ -154,7 +154,7 @@ func (s *Server) insertTechfugee(resp http.ResponseWriter, r *http.Request) {
 	_, _ = resp.Write(js)
 }
 
-func (s *Server) InsertDonator(resp http.ResponseWriter, r *http.Request) {
+func (s *Server) insertDonator(resp http.ResponseWriter, r *http.Request) {
 	name := r.FormValue("name")
 	email := r.FormValue("email")
 	profile := r.FormValue("profile")

@@ -90,7 +90,7 @@ func (d *Donatugee) UpdateAuth(id string, passed string) (Techfugee, []error) {
 	var techfugee Techfugee
 	newID, err := strconv.Atoi(id)
 	if err != nil {
-		return techfugee, []error {err}
+		return techfugee, []error{err}
 	}
 	errs := d.db.First(&techfugee, "id = ?", newID).GetErrors()
 	if len(errs) > 0 {
@@ -152,17 +152,17 @@ func (d *Donatugee) UpdateTechfugee(id, city, introduction string) (Techfugee, [
 }
 
 func (d *Donatugee) InsertTechfugee(name, email, skills string) (Techfugee, []error) {
-	techfugee := Techfugee{}
-	errs := d.db.Where(&Techfugee{}, "email = ?", email).GetErrors()
-	if len(errs) > 0 {
-		return techfugee, errs
+	var techfugees []Techfugee
+	errs := d.db.Find(&techfugees, "email = ?", email).GetErrors()
+	if len(errs) != 0 {
+		return Techfugee{}, errs
 	}
 
-	if techfugee.Email == email {
-		return techfugee, nil
+	if len(techfugees) > 0 {
+		return techfugees[0], nil
 	}
 
-	techfugee = Techfugee{
+	techfugee := Techfugee{
 		Name:   name,
 		Email:  email,
 		Skills: skills,
