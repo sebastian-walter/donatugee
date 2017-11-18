@@ -118,7 +118,7 @@ func (s *Server) updateTechfugee(resp http.ResponseWriter, r *http.Request) {
 
 func (s *Server) techfugees(resp http.ResponseWriter, r *http.Request) {
 	techfugees, errs := s.donatugee.Techfugees()
-	if errs != nil {
+	if len(errs) != 0 {
 		http.Error(resp, fmt.Sprintf("query: %v", errs), http.StatusInternalServerError)
 		return
 	}
