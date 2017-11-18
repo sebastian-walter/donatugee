@@ -1,1 +1,1 @@
-web: ls -al go/bin
+web: go/bin/donatugee
