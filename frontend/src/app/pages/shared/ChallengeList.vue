@@ -13,11 +13,7 @@
     	name: 'ChallengeList',
         data() {
             return {
-<<<<<<< HEAD
                 challenges: [],
-=======
-                challenges: []
->>>>>>> bf1be1f9e26414f168c487d773bfc63c47b3f2cb
             };
         },
         mounted() {
