@@ -1,14 +1,23 @@
 <template>
-    <div>
+    <div class="mb-4">
         <v-flex xs12>
-            <v-card>
+            <v-card :to="{ path: 'challenge/' + challenge.ChallengeID }">
                 <v-card-title>
                     <div>
-                        <h3 class="headline mb-0">Challenge Headline</h3>
-                        <p>Description</p>
+                        <h3 class="headline mb-2">{{ challenge.Name }}</h3>
+                        <p>{{ challenge.Description }}</p>
+                        <v-chip color="orange" text-color="white">
+                            <v-icon left>laptop</v-icon>
+                            Laptop
+                        </v-chip>
+                        <v-chip color="indigo" text-color="white">
+                            <v-icon left>code</v-icon>
+                            Udemy
+                        </v-chip>
                     </div>
                 </v-card-title>
-                <v-card-title primary-title class="pt-0">
+                <v-divider></v-divider>
+                <v-card-title primary-title class="pt-3">
                     <v-flex xs2>
                         <v-avatar
                                 :tile="tile"
@@ -18,7 +27,7 @@
                             <img src="/static/apple-touch-icon-180x180.png" alt="avatar">
                         </v-avatar>
                     </v-flex>
-                    <v-flex xs10>
+                    <v-flex xs9 offset-xs1>
                         <h3 class="mb-0">Trivago</h3>
                         <div>Location</div>
                     </v-flex>
@@ -30,6 +39,9 @@
 
 <script>
     export default {
-        name: 'ChallengeItem'
+        name: 'ChallengeItem',
+        props: {
+            challenge: { type: Object, required: true }
+        }
     }
 </script>
