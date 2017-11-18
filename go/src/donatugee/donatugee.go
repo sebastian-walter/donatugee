@@ -90,6 +90,12 @@ func (d *Donatugee) Techfugee(id string) (Techfugee, []error) {
 	return techfugee, errs
 }
 
+func (d *Donatugee) Challenge(id string) (Challenge, []error) {
+	var challenge Challenge
+	errs := d.db.First(&challenge, "id = ?", id).GetErrors()
+	return challenge, errs
+}
+
 func (d *Donatugee) UpdateTechfugeeSkills(techfugee Techfugee, skills string) (Techfugee, []error) {
 	techfugee.Skills = skills
 	errs := d.db.Save(&techfugee).GetErrors()

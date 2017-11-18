@@ -84,6 +84,41 @@ func (s *Server) insertTechfugee(resp http.ResponseWriter, r *http.Request) {
 	_, _ = resp.Write(js)
 }
 
+func (s *Server) techfugee(resp http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+
+	techfugee, errs := s.donatugee.Techfugee(id)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("get: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(techfugee)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+	}
+
+	_, _ = resp.Write(js)
+}
+
+func (s *Server) challenge(resp http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+
+	challenge, errs := s.donatugee.Challenge(id)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("get: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(challenge)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+	}
+
+	_, _ = resp.Write(js)
+}
+
+
 func (s *Server) addSkills(resp http.ResponseWriter, r *http.Request) {
 	id := r.FormValue("id")
 	skills := r.FormValue("skills")
