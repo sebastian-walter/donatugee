@@ -3,10 +3,13 @@ package main
 import (
 	"time"
 
+	"os"
+
 	"fmt"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 type Applicaton struct {
@@ -58,11 +61,27 @@ type Server struct {
 	donatugee *Donatugee
 }
 
+func OpenDatabase() (db *DB, err error) {
+	if os.Getenv("ENV") == "production" {
+		db, err := gorm.Open("postgres",
+			fmt.Sprintf("host=%s user=%s dbname=%s sslmode=enable password=%s",
+				os.Getenv("P_HOST"),
+				os.Getenv("P_USER"),
+				os.Getenv("P_DB"),
+				os.Getenv("P_PW")))
+		return db, err
+	} else {
+		db, err := gorm.Open("sqlite3", "db.sqlite")
+		return db, err
+	}
+}
+
 func NewDonatugee() (*Donatugee, error) {
-	db, err := gorm.Open("sqlite3", "db.sqlite")
+	db, err := OpenDatabase()
 	if err != nil {
 		return nil, err
 	}
+	db.AutoMigrate(&Donatugee{})
 	return &Donatugee{
 		db: db,
 	}, nil
