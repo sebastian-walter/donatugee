@@ -95,7 +95,7 @@ func (d *Donatugee) UpdateAuth(id string, passed string) (Techfugee, []error) {
 	return techfugee, d.db.Save(&techfugee).GetErrors()
 }
 
-func (d *Donatugee) Challenges() ([]Challenge, error) {
+func (d *Donatugee) Challenges() ([]Challenge, []error) {
 	var challenges []Challenge
 	errs := d.db.Find(&challenges).GetErrors()
 	return challenges, errs
