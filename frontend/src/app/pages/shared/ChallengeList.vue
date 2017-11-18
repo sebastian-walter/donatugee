@@ -14,7 +14,7 @@
     	name: 'ChallengeList',
         data() {
             return {
-                challenges
+                challenges: [],
             };
         },
         mounted() {
@@ -30,8 +30,7 @@
 
         },
         components: {
-            ChallengeItem
-            axios
+            ChallengeItem,
         }
     }
 </script>
