@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"os"
 
-	"strconv"
-
 	"github.com/rs/cors"
 )
 
@@ -58,8 +56,7 @@ func (s *Server) updateAuth(resp http.ResponseWriter, r *http.Request) {
 	id := r.FormValue("id")
 	passed := r.FormValue("passed")
 
-	idTechfugee, err := strconv.ParseUint(id, 10, 64)
-	techfugee, errs := s.donatugee.UpdateAuth(uint(idTechfugee), passed)
+	techfugee, errs := s.donatugee.UpdateAuth(id, passed)
 	if len(errs) > 0 {
 		http.Error(resp, fmt.Sprintf("update: %v", errs), http.StatusInternalServerError)
 		return

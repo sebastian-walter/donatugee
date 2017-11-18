@@ -75,20 +75,19 @@ func NewDonatugee(dbname string) (*Donatugee, error) {
 
 func (d *Donatugee) Techfugees() ([]Techfugee, []error) {
 	var techfugees []Techfugee
-	errs := d.db.Debug().Find(&techfugees).GetErrors()
+	errs := d.db.Find(&techfugees).GetErrors()
 	return techfugees, errs
 
 }
 
-func (d *Donatugee) UpdateAuth(idTechfugee uint, passed string) (Techfugee, []error) {
+func (d *Donatugee) UpdateAuth(id string, passed string) (Techfugee, []error) {
 	var techfugee Techfugee
-	errs := d.db.First(&techfugee, "id = ?", idTechfugee).GetErrors()
+	errs := d.db.First(&techfugee, "id = ?", id).GetErrors()
 	if len(errs) > 0 {
 		return techfugee, errs
 	}
 
 	techfugee.Authenticated = passed
-
 	return techfugee, d.db.Save(&techfugee).GetErrors()
 }
 
