@@ -19,6 +19,7 @@ type Donator struct {
 	Challenges []Challenge `gorm:"ForeignKey:ID"`
 
 	Name    string
+	Email   string
 	Profile string
 	Image   string
 }
@@ -137,6 +138,27 @@ func (d *Donatugee) InsertTechfugee(name, email, skills string) (Techfugee, []er
 	}
 
 	return techfugee, d.db.Create(&techfugee).GetErrors()
+}
+
+func (d *Donatugee) InsertDonator(name, email, profile, image string) (Donator, []error) {
+	donator := Donator{}
+	errs := d.db.Where(&Donator{}, "email = ?", email).GetErrors()
+	if len(errs) > 0 {
+		return donator, errs
+	}
+
+	if donator.Email == email {
+		return donator, nil
+	}
+
+	donator = Donator{
+		Name:   name,
+		Email:  email,
+		Profile: profile,
+		Image: image,
+	}
+
+	return donator, d.db.Create(&donator).GetErrors()
 }
 
 func (d *Donatugee) IntializeDB() []error {
