@@ -25,10 +25,9 @@
         </v-layout>
 
         <v-layout>
-
-            <v-flex xs12 >
-
+            <v-flex xs12>
                 <v-btn color="primary">Edit profile</v-btn>
+                <v-btn color="error">Log out</v-btn>
             </v-flex>
         </v-layout>
     </div>
