@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"strconv"
+
 	"github.com/jinzhu/gorm"
 )
 
@@ -12,6 +14,7 @@ type Application struct {
 	ApplicationID uint
 	TechfugeeID   uint `sql:"type: integer REFERENCES techfugees(id)"`
 	ChallengeID   uint `sql:"type: integer REFERENCES challenges(id)"`
+	Accepted      bool
 }
 
 type Donator struct {
@@ -19,6 +22,7 @@ type Donator struct {
 	Challenges []Challenge `gorm:"ForeignKey:ID"`
 
 	Name    string
+	Email   string
 	Profile string
 	Image   string
 }
@@ -29,6 +33,8 @@ type Techfugee struct {
 	Name          string
 	Email         string
 	Skills        string
+	City          string
+	Introduction  string
 	Authenticated string
 }
 
@@ -75,13 +81,71 @@ func NewDonatugee(dbname string) (*Donatugee, error) {
 
 func (d *Donatugee) Techfugees() ([]Techfugee, []error) {
 	var techfugees []Techfugee
-	errs := d.db.Debug().Find(&techfugees).GetErrors()
+	errs := d.db.Find(&techfugees).GetErrors()
 	return techfugees, errs
 
 }
 
-func (d *Donatugee) Challenges() ([]Challenge, error) {
-	return []Challenge{}, nil
+func (d *Donatugee) UpdateAuth(id string, passed string) (Techfugee, []error) {
+	var techfugee Techfugee
+	newID, _ := strconv.Atoi(id)
+	errs := d.db.First(&techfugee, "id = ?", newID).GetErrors()
+	if len(errs) > 0 {
+		return techfugee, errs
+	}
+
+	techfugee.Authenticated = passed
+	return techfugee, d.db.Save(&techfugee).GetErrors()
+}
+
+func (d *Donatugee) Challenges() ([]Challenge, []error) {
+	var challenges []Challenge
+	errs := d.db.Find(&challenges).GetErrors()
+	return challenges, errs
+}
+
+func (d *Donatugee) Techfugee(id string) (Techfugee, []error) {
+	var techfugee Techfugee
+	newID, _ := strconv.Atoi(id)
+	errs := d.db.First(&techfugee, "id = ?", newID).GetErrors()
+	return techfugee, errs
+}
+
+func (d *Donatugee) Challenge(id string) (Challenge, []error) {
+	var challenge Challenge
+	newID, err := strconv.Atoi(id)
+	if err != nil {
+		return Challenge{}, []error{err}
+	}
+
+	errs := d.db.First(&challenge, "id = ?", newID).GetErrors()
+	return challenge, errs
+}
+
+func (d *Donatugee) Donator(id string) (Donator, []error) {
+	var donator Donator
+	newID, _ := strconv.Atoi(id)
+	errs := d.db.First(&donator, "id = ?", newID).GetErrors()
+	return donator, errs
+}
+
+func (d *Donatugee) UpdateTechfugeeSkills(techfugee Techfugee, skills string) (Techfugee, []error) {
+	techfugee.Skills = skills
+	errs := d.db.Save(&techfugee).GetErrors()
+	return techfugee, errs
+}
+
+func (d *Donatugee) UpdateTechfugee(id, city, introduction string) (Techfugee, []error) {
+	var techfugee Techfugee
+
+	errs := d.db.Where(&techfugee, "id = ?", id).GetErrors()
+	if len(errs) > 0 {
+		return techfugee, errs
+	}
+
+	techfugee.City = city
+	techfugee.Introduction = introduction
+	return techfugee, d.db.Save(&techfugee).GetErrors()
 }
 
 func (d *Donatugee) InsertTechfugee(name, email, skills string) (Techfugee, []error) {
@@ -104,6 +168,44 @@ func (d *Donatugee) InsertTechfugee(name, email, skills string) (Techfugee, []er
 	return techfugee, d.db.Create(&techfugee).GetErrors()
 }
 
+func (d *Donatugee) InsertApplication(techfugee, challenge string) (Application, []error) {
+
+	newID1, _ := strconv.Atoi(techfugee)
+	newID2, _ := strconv.Atoi(challenge)
+
+	application := Application{
+		TechfugeeID: uint(newID1),
+		ChallengeID: uint(newID2),
+	}
+	errs := d.db.Where(&Application{}, "techfugee_id = ? AND challenge_id = ?", newID1, newID2).GetErrors()
+	if len(errs) > 0 {
+		return application, errs
+	}
+
+	return application, d.db.Create(&application).GetErrors()
+}
+
+func (d *Donatugee) InsertDonator(name, email, profile, image string) (Donator, []error) {
+	donator := Donator{}
+	errs := d.db.Where(&donator, "email = ?", email).GetErrors()
+	if len(errs) > 0 {
+		return donator, errs
+	}
+
+	if donator.Email == email {
+		return donator, nil
+	}
+
+	donator = Donator{
+		Name:    name,
+		Email:   email,
+		Profile: profile,
+		Image:   image,
+	}
+
+	return donator, d.db.Create(&donator).GetErrors()
+}
+
 func (d *Donatugee) IntializeDB() []error {
 	errs := d.db.AutoMigrate(&Techfugee{}, &Donator{}, &Challenge{}, &Application{}).GetErrors()
 	if len(errs) != 0 {
@@ -111,4 +213,20 @@ func (d *Donatugee) IntializeDB() []error {
 	}
 
 	return nil
+}
+
+func (d *Donatugee) InsertChallenge(idDonator, name, description string) (Challenge, []error) {
+	id, err := strconv.ParseUint(idDonator, 10, 64)
+	if err != nil {
+		return Challenge{}, []error{err}
+	}
+
+	challenge := Challenge{
+		DonatorID:   uint(id),
+		Name:        name,
+		Description: description,
+	}
+
+	errs := d.db.Create(&challenge).GetErrors()
+	return challenge, errs
 }

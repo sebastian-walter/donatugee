@@ -20,8 +20,6 @@
                 <v-card-title primary-title class="pt-3">
                     <v-flex xs2>
                         <v-avatar
-                                :tile="tile"
-                                :size="avatarSize"
                                 class="grey lighten-4"
                         >
                             <img src="https://lorempixel.com/180/180/cats/" alt="avatar">
@@ -43,8 +41,12 @@
     export default {
         name: 'ChallengeItem',
         props: {
-            challenge: { type: Object, required: true },
-            donator: { type: Object, required: true }
+            challenge: { type: Object, required: true }
+        },
+        data() {
+            return {
+                donator: { type: Object, required: true }
+            }
         },
         mounted() {
             getDonator(this.challenge.DonatorID).then(response => {

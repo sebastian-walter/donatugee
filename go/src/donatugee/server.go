@@ -31,7 +31,15 @@ func (s *Server) start() error {
 
 	mux.HandleFunc("/api/v1/challenges", s.challenges)
 	mux.HandleFunc("/api/v1/insert-techfugee", s.insertTechfugee)
+	mux.HandleFunc("/api/v1/insert-donator", s.InsertDonator)
 	mux.HandleFunc("/api/v1/techfugees", s.techfugees)
+	mux.HandleFunc("/api/v1/techfugee", s.techfugee)
+	mux.HandleFunc("/api/v1/challenge", s.challenge)
+	mux.HandleFunc("/api/v1/donator", s.donator)
+	mux.HandleFunc("/api/v1/update-auth", s.updateAuth)
+	mux.HandleFunc("/api/v1/add-skills", s.addSkills)
+	mux.HandleFunc("/api/v1/insert-challenge", s.insertChallenge)
+	mux.HandleFunc("/api/v1/update-techfugee", s.updateTechfugee)
 
 	mux.Handle("/public", http.FileServer(http.Dir("./frontend/public")))
 	mux.Handle("/dist", http.FileServer(http.Dir("./frontend/dist")))
@@ -50,15 +58,75 @@ func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request
 	return http.HandlerFunc(fn)
 }
 
+func (s *Server) insertChallenge(resp http.ResponseWriter, r *http.Request) {
+	idDonator := r.FormValue("id_donator")
+	name := r.FormValue("name")
+	description := r.FormValue("description")
+
+	challenge, errs := s.donatugee.InsertChallenge(idDonator, name, description)
+	if len(errs) > 0 {
+		http.Error(resp, fmt.Sprintf("insert: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(challenge)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	_, _ = resp.Write(js)
+}
+
+func (s *Server) updateAuth(resp http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+	passed := r.FormValue("passed")
+
+	techfugee, errs := s.donatugee.UpdateAuth(id, passed)
+	if len(errs) > 0 {
+		http.Error(resp, fmt.Sprintf("update: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(techfugee)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", errs), http.StatusInternalServerError)
+	}
+
+	_, _ = resp.Write(js)
+}
+
+func (s *Server) updateTechfugee(resp http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+	city := r.FormValue("city")
+	introduction := r.FormValue("introduction")
+
+	techfugee, errs := s.donatugee.UpdateTechfugee(id, city, introduction)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("query: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(techfugee)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	_, _ = resp.Write(js)
+}
+
 func (s *Server) techfugees(resp http.ResponseWriter, r *http.Request) {
 	techfugees, errs := s.donatugee.Techfugees()
-	if errs != nil {
+	if len(errs) != 0 {
 		http.Error(resp, fmt.Sprintf("query: %v", errs), http.StatusInternalServerError)
+		return
 	}
 
 	js, err := json.Marshal(techfugees)
 	if err != nil {
 		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+		return
 	}
 
 	_, _ = resp.Write(js)
@@ -78,40 +146,136 @@ func (s *Server) insertTechfugee(resp http.ResponseWriter, r *http.Request) {
 	js, err := json.Marshal(techfugee)
 	if err != nil {
 		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	_, _ = resp.Write(js)
+}
+
+func (s *Server) InsertDonator(resp http.ResponseWriter, r *http.Request) {
+	name := r.FormValue("name")
+	email := r.FormValue("email")
+	profile := r.FormValue("profile")
+	image := r.FormValue("image")
+
+	donator, errs := s.donatugee.InsertDonator(name, email, profile, image)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("insert: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(donator)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	_, _ = resp.Write(js)
+}
+
+func (s *Server) InsertApplicadior(resp http.ResponseWriter, r *http.Request) {
+	techfugee_id := r.FormValue("techfugee_id")
+	challenge_id := r.FormValue("challenge_id")
+
+	application, errs := s.donatugee.InsertApplication(techfugee_id, challenge_id)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("insert: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(application)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	_, _ = resp.Write(js)
+}
+
+func (s *Server) techfugee(resp http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+
+	techfugee, errs := s.donatugee.Techfugee(id)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("get: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(techfugee)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	_, _ = resp.Write(js)
+}
+
+func (s *Server) donator(resp http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+
+	donator, errs := s.donatugee.Donator(id)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("get: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(donator)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	_, _ = resp.Write(js)
+}
+
+func (s *Server) challenge(resp http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+
+	challenge, errs := s.donatugee.Challenge(id)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("get: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(challenge)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	_, _ = resp.Write(js)
+}
+
+func (s *Server) addSkills(resp http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+	skills := r.FormValue("skills")
+
+	techfugee, errs := s.donatugee.Techfugee(id)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("getfugee: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	techfugee, errs = s.donatugee.UpdateTechfugeeSkills(techfugee, skills)
+
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("addskille: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(techfugee)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
 	}
 
 	_, _ = resp.Write(js)
 }
 
 func (s *Server) challenges(resp http.ResponseWriter, r *http.Request) {
-	application := Application{
-		ApplicationID: 1,
-	}
-
-	// techfugee := Techfugee{
-	// 	TechfugeeID:  1,
-	// 	Applications: []Application{application},
-	// 	Name:         "Michael Foo",
-	// 	Email:        "michaelfoo@gmail.com",
-	// 	Created:      time.Now(),
-	// 	Modified:     time.Now(),
-	// }
-
-	challenges := []Challenge{
-		Challenge{
-			ChallengeID:  1,
-			Applications: []Application{},
-			Name:         "Learn PHP in 3 month",
-			Image:        "",
-			Description:  "go to laracast, learn PHP and pitch us what you learned",
-		},
-		Challenge{
-			ChallengeID:  2,
-			Applications: []Application{application},
-			Name:         "Learn Go in 3 month",
-			Image:        "",
-			Description:  "go to the Go tour, learn Go and create a small Go app",
-		},
+	challenges, errs := s.donatugee.Challenges()
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("challenges: %v", errs), http.StatusInternalServerError)
+		return
 	}
 
 	js, err := json.Marshal(challenges)
