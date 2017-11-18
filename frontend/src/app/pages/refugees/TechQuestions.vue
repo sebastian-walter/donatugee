@@ -125,10 +125,26 @@
                     passed: true
 				}).then(response => {
 					if (response.status === 200) {
-						this.$router.push({
-							path: '/refugee/further-details',
+						if (window.localStorage.getItem('introduction') === '' ||
+							window.localStorage.getItem('city') === '') {
+							return this.$router.push({
+								path: 'refugee/further-actions',
+							});
+						}
+
+						const idChallenge = window.localStorage.getItem('idChallenge');
+						if (idChallenge === null) {
+							this.$router.push({
+								path: '/challenges',
+							});
+						}
+
+						return this.$router.push({
+							path: '/challenge',
+							params: {
+								id: idChallenge,
+							}
 						});
-						return;
                     }
 
                     this.errorMessage = 'Ooops, something went wrong. Please try again.';
