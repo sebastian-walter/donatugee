@@ -4,6 +4,8 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm"
+	"os"
+	"fmt"
 )
 
 type Application struct {
@@ -51,7 +53,7 @@ type Donatugee struct {
 	db *gorm.DB
 }
 
-func OpenDatabase() (db *DB, err error) {
+func OpenDatabase() (db *gorm.DB, err error) {
 	if os.Getenv("ENV") == "production" {
 		db, err := gorm.Open("postgres",
 			fmt.Sprintf("host=%s user=%s dbname=%s sslmode=enable password=%s",
