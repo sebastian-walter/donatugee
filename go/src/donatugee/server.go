@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"time"
-
 	"github.com/rs/cors"
 )
 
