@@ -1,1 +1,1 @@
-web: go/go
+web: ls -al go
