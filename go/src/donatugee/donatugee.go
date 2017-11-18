@@ -114,7 +114,7 @@ func (d *Donatugee) ChallengesByTechfugee(idTechfugee string) ([]Challenge, []er
 	}
 
 	var challenges []Challenge
-	errs = d.db.Find(&challenges, "id = ?", ids).GetErrors()
+	errs = d.db.Debug().Find(&challenges, "id IN (?)", ids).GetErrors()
 	return challenges, errs
 
 }
