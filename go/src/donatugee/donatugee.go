@@ -84,6 +84,18 @@ func (d *Donatugee) Challenges() ([]Challenge, error) {
 	return []Challenge{}, nil
 }
 
+func (d *Donatugee) Techfugee(id string) (Techfugee, []error) {
+	var techfugee Techfugee
+	errs := d.db.First(&techfugee, "id = ?", id).GetErrors()
+	return techfugee, errs
+}
+
+func (d *Donatugee) UpdateTechfugeeSkills(techfugee Techfugee, skills string) (Techfugee, []error) {
+	techfugee.Skills = skills
+	errs := d.db.Save(&techfugee).GetErrors()
+	return techfugee, errs
+}
+
 func (d *Donatugee) InsertTechfugee(name, email, skills string) (Techfugee, []error) {
 	techfugee := Techfugee{}
 	errs := d.db.Where(&Techfugee{}, "email = ?", email).GetErrors()
