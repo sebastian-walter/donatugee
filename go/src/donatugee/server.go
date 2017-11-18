@@ -62,7 +62,7 @@ func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request
 }
 
 func (s *Server) applicationByTechfugee(resp http.ResponseWriter, r *http.Request) {
-	idTechfugee := r.FormValue("id_techfugee")
+	idTechfugee := r.FormValue("id")
 
 	applications, errs := s.donatugee.ApplicatonByTechfugee(idTechfugee)
 	if len(errs) != 0 {
