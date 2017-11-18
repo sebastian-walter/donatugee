@@ -33,6 +33,8 @@ type Techfugee struct {
 	Name          string
 	Email         string
 	Skills        string
+	City          string
+	Introduction  string
 	Authenticated string
 }
 
@@ -131,6 +133,19 @@ func (d *Donatugee) UpdateTechfugeeSkills(techfugee Techfugee, skills string) (T
 	techfugee.Skills = skills
 	errs := d.db.Save(&techfugee).GetErrors()
 	return techfugee, errs
+}
+
+func (d *Donatugee) UpdateTechfugee(id, city, introduction string) (Techfugee, []error) {
+	var techfugee Techfugee
+
+	errs := d.db.Where(&techfugee, "id = ?", id).GetErrors()
+	if len(errs) > 0 {
+		return techfugee, errs
+	}
+
+	techfugee.City = city
+	techfugee.Introduction = introduction
+	return techfugee, d.db.Save(&techfugee).GetErrors()
 }
 
 func (d *Donatugee) InsertTechfugee(name, email, skills string) (Techfugee, []error) {
