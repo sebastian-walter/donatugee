@@ -41,7 +41,7 @@ func (s *Server) start() error {
 	// api.NotFoundHandler = JSONNotFound
 
 	// Serve static assets directly.
-	r.PathPrefix("/dist").Handler(http.FileServer(http.Dir("./frontend/dist")))
+	r.PathPrefix("/dist/build.js").HandlerFunc(IndexHandler("./frontend/dist/build.js"))
 
 	// Catch-all: Serve our JavaScript application's entry-point (index.html).
 	r.PathPrefix("/").HandlerFunc(IndexHandler("./frontend/index.html"))
