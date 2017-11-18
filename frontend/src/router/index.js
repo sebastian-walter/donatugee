@@ -10,6 +10,7 @@ import CreateChallenge from '../app/pages/companies/CreateChallenge.vue';
 import RefugeeRegister from '../app/pages/refugees/Register.vue';
 import CompanyRegister from '../app/pages/companies/Register.vue';
 import Interests from '../app/pages/refugees/Interests.vue';
+import TechQuestions from '../app/pages/refugees/TechQuestions.vue';
 
 Vue.use(Router);
 
@@ -53,6 +54,10 @@ const routes = [
 	{
 		path: '/interests/add/:idUser',
 		component: Interests,
+	},
+	{
+		path: '/tech-questions/:step',
+		component: TechQuestions,
 	},
 ];
 
