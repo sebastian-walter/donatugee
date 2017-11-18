@@ -114,6 +114,12 @@ func (d *Donatugee) Techfugee(id string) (Techfugee, []error) {
 	return techfugee, errs
 }
 
+func (d *Donatugee) LoginTechfugee(email string) (Techfugee, []error) {
+	var techfugee Techfugee
+	errs := d.db.Preload("Applications").First(&techfugee, "email = ?", email).GetErrors()
+	return techfugee, errs
+}
+
 func (d *Donatugee) Challenge(id string) (Challenge, []error) {
 	var challenge Challenge
 	newID, err := strconv.Atoi(id)
