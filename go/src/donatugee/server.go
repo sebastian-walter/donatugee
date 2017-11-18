@@ -38,7 +38,7 @@ func (s *Server) start() error {
 	api := r.PathPrefix("/api/v1/").Subrouter()
 	api.HandleFunc("/challenges", GetChallenges).Methods("GET")
 	// Optional: Use a custom 404 handler for our API paths.
-	api.NotFoundHandler = JSONNotFound
+	// api.NotFoundHandler = JSONNotFound
 
 	// Serve static assets directly.
 	r.PathPrefix("/dist").Handler(http.FileServer(http.Dir("./frontend/dist")))
