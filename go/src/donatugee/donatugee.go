@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/jinzhu/gorm"
+	"strconv"
 )
 
 type Application struct {
@@ -83,7 +84,7 @@ func (d *Donatugee) Techfugees() ([]Techfugee, []error) {
 
 func (d *Donatugee) UpdateAuth(id string, passed string) (Techfugee, []error) {
 	var techfugee Techfugee
-	errs := d.db.First(&techfugee, "id = ?", id).GetErrors()
+	errs := d.db.First(&techfugee, "id = ?", strconv.Atoi(id)).GetErrors()
 	if len(errs) > 0 {
 		return techfugee, errs
 	}
@@ -98,19 +99,19 @@ func (d *Donatugee) Challenges() ([]Challenge, error) {
 
 func (d *Donatugee) Techfugee(id string) (Techfugee, []error) {
 	var techfugee Techfugee
-	errs := d.db.First(&techfugee, "id = ?", id).GetErrors()
+	errs := d.db.First(&techfugee, "id = ?", strconv.Atoi(id)).GetErrors()
 	return techfugee, errs
 }
 
 func (d *Donatugee) Challenge(id string) (Challenge, []error) {
 	var challenge Challenge
-	errs := d.db.First(&challenge, "id = ?", id).GetErrors()
+	errs := d.db.First(&challenge, "id = ?", strconv.Atoi(id)).GetErrors()
 	return challenge, errs
 }
 
 func (d *Donatugee) Donator(id string) (Donator, []error) {
 	var donator Donator
-	errs := d.db.First(&donator, "id = ?", id).GetErrors()
+	errs := d.db.First(&donator, "id = ?", strconv.Atoi(id)).GetErrors()
 	return donator, errs
 }
 
