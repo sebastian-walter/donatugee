@@ -14,6 +14,7 @@ type Application struct {
 	ApplicationID uint
 	TechfugeeID   uint `sql:"type: integer REFERENCES techfugees(id)"`
 	ChallengeID   uint `sql:"type: integer REFERENCES challenges(id)"`
+	Accepted      bool
 }
 
 type Donator struct {
@@ -108,7 +109,11 @@ func (d *Donatugee) Techfugee(id string) (Techfugee, []error) {
 
 func (d *Donatugee) Challenge(id string) (Challenge, []error) {
 	var challenge Challenge
-	newID, _ := strconv.Atoi(id)
+	newID, err := strconv.Atoi(id)
+	if err != nil {
+		return Challenge{}, []error{err}
+	}
+
 	errs := d.db.First(&challenge, "id = ?", newID).GetErrors()
 	return challenge, errs
 }
