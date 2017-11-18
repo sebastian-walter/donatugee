@@ -1,1 +1,1 @@
-web: go/donatugee
+web: go/go
