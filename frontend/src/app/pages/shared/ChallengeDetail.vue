@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 class="mb-2">Challenge {{ idChallenge }}</h1>
+        <h1 class="mb-2">Challenge {{ challenge.Name }}</h1>
         <h3 class="mb-2">powered by Trivago</h3>
 
         <p class="mb-4">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,</p>
@@ -30,10 +30,9 @@
                     <v-flex xs2>
                         <v-avatar
                                 :tile="tile"
-                                :size="avatarSize"
                                 class="grey lighten-4"
                         >
-                            <img src="/static/apple-touch-icon-180x180.png" alt="avatar">
+                            <img src="https://lorempixel.com/180/180/cats/" alt="avatar">
                         </v-avatar>
                     </v-flex>
                     <v-flex xs9 offset-xs1>
@@ -49,15 +48,20 @@
     </div>
 </template>
 <script>
+    import { getChallenge } from '../../api/api';
+
     export default {
     	name: 'ChallengeDetail',
         data() {
     		return {
     		    idChallenge: this.$route.params.id,
+                challenge: {}
             }
         },
         mounted() {
-
+            getChallenge(this.idChallenge).then(response => {
+                this.challenge = response.data;
+            });
         }
     }
 </script>

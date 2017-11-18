@@ -148,6 +148,24 @@ func (s *Server) InsertDonator(resp http.ResponseWriter, r *http.Request) {
 	_, _ = resp.Write(js)
 }
 
+func (s *Server) InsertApplicadior(resp http.ResponseWriter, r *http.Request) {
+	techfugee_id := r.FormValue("techfugee_id")
+	challenge_id := r.FormValue("challenge_id")
+
+	application, errs := s.donatugee.InsertApplication(techfugee_id, challenge_id)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("insert: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(application)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+	}
+
+	_, _ = resp.Write(js)
+}
+
 func (s *Server) techfugee(resp http.ResponseWriter, r *http.Request) {
 	id := r.FormValue("id")
 
@@ -225,34 +243,11 @@ func (s *Server) addSkills(resp http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) challenges(resp http.ResponseWriter, r *http.Request) {
-	application := Application{
-		ApplicationID: 1,
-	}
 
-	// techfugee := Techfugee{
-	// 	TechfugeeID:  1,
-	// 	Applications: []Application{application},
-	// 	Name:         "Michael Foo",
-	// 	Email:        "michaelfoo@gmail.com",
-	// 	Created:      time.Now(),
-	// 	Modified:     time.Now(),
-	// }
-
-	challenges := []Challenge{
-		Challenge{
-			ChallengeID:  1,
-			Applications: []Application{},
-			Name:         "Learn PHP in 3 month",
-			Image:        "",
-			Description:  "go to laracast, learn PHP and pitch us what you learned",
-		},
-		Challenge{
-			ChallengeID:  2,
-			Applications: []Application{application},
-			Name:         "Learn Go in 3 month",
-			Image:        "",
-			Description:  "go to the Go tour, learn Go and create a small Go app",
-		},
+	challenges, errs := s.donatugee.Challenges()
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("challenges: %v", errs), http.StatusInternalServerError)
+		return
 	}
 
 	js, err := json.Marshal(challenges)

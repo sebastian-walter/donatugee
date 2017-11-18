@@ -96,8 +96,10 @@ func (d *Donatugee) UpdateAuth(id string, passed string) (Techfugee, []error) {
 	return techfugee, d.db.Save(&techfugee).GetErrors()
 }
 
-func (d *Donatugee) Challenges() ([]Challenge, error) {
-	return []Challenge{}, nil
+func (d *Donatugee) Challenges() ([]Challenge, []error) {
+	var challenges []Challenge
+	errs := d.db.Find(&challenges).GetErrors()
+	return challenges, errs
 }
 
 func (d *Donatugee) Techfugee(id string) (Techfugee, []error) {
@@ -149,6 +151,23 @@ func (d *Donatugee) InsertTechfugee(name, email, skills string) (Techfugee, []er
 	}
 
 	return techfugee, d.db.Create(&techfugee).GetErrors()
+}
+
+func (d *Donatugee) InsertApplication(techfugee, challenge string) (Application, []error) {
+
+	newID1, _ := strconv.Atoi(techfugee)
+	newID2, _ := strconv.Atoi(challenge)
+
+	application := Application{
+		TechfugeeID: uint(newID1),
+		ChallengeID: uint(newID2),
+	}
+	errs := d.db.Where(&Application{}, "techfugee_id = ? AND challenge_id = ?", newID1, newID2).GetErrors()
+	if len(errs) > 0 {
+		return application, errs
+	}
+
+	return application, d.db.Create(&application).GetErrors()
 }
 
 func (d *Donatugee) InsertDonator(name, email, profile, image string) (Donator, []error) {
