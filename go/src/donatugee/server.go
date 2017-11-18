@@ -183,7 +183,7 @@ func (s *Server) donator(resp http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) challenge(resp http.ResponseWriter, r *http.Request) {
-	id := r.FormValue("id_donator")
+	id := r.FormValue("id")
 
 	challenge, errs := s.donatugee.Challenge(id)
 	if len(errs) != 0 {
