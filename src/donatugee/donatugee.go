@@ -4,6 +4,8 @@ import (
 	"time"
 
 	"github.com/jinzhu/gorm"
+	"os"
+	"fmt"
 )
 
 type Application struct {
