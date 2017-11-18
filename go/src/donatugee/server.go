@@ -17,11 +17,26 @@ func NewServer(donatugee *Donatugee) *Server {
 	}
 
 	http.HandleFunc("/challenges", s.challenges)
+	http.HandleFunc("/insert-techfugee", s.insertTechfugee)
 	return s
 }
 
 func (s *Server) start() error {
 	return http.ListenAndServe(":8081", nil)
+}
+
+func (s *Server) insertTechfugee(resp http.ResponseWriter, r *http.Request) {
+	name := r.FormValue("name")
+	email := r.FormValue("email")
+	skills := r.FormValue("skills")
+
+	errs := s.donatugee.InsertTechfugee(name, email, skills)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("%v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	_, _ = resp.Write([]byte("success"))
 }
 
 func (s *Server) challenges(resp http.ResponseWriter, r *http.Request) {

@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	d, err := NewDonatugee()
+	d, err := NewDonatugee("db.sqlite")
 	if err != nil {
 		panic(err)
 	}

@@ -9,8 +9,8 @@ import (
 type Application struct {
 	gorm.Model
 	ApplicationID uint
-	DonatorID     uint
-	ChallengeID   uint
+	TechfugeeID   uint `sql:"type: integer REFERENCES techfugees(id)"`
+	ChallengeID   uint `sql:"type: integer REFERENCES challenges(id)"`
 
 	Created  time.Time
 	Modified time.Time
@@ -18,8 +18,7 @@ type Application struct {
 
 type Donator struct {
 	gorm.Model
-	DonatorID  uint
-	Challenges []Challenge `gorm:"ForeignKey:DonatorID"`
+	Challenges []Challenge `gorm:"ForeignKey:ID"`
 
 	Name     string
 	Profile  string
@@ -30,19 +29,20 @@ type Donator struct {
 
 type Techfugee struct {
 	gorm.Model
-	TechfugeeID  uint
-	Applications []Application `gorm:"ForeignKey:TechfugeeID"`
-	Name         string
-	Email        string
-	Created      time.Time
-	Modified     time.Time
+	Applications  []Application
+	Name          string
+	Email         string
+	Skills        string
+	Authenticated string
+	Created       time.Time
+	Modified      time.Time
 }
 
 type Challenge struct {
 	gorm.Model
 	ChallengeID  uint
-	DonatorID    uint
-	Applications []Application `gorm:"ForeignKey:ChallengeID"`
+	DonatorID    uint `sql:"type: integer REFERENCES donators(id)"`
+	Applications []Application
 	Name         string
 	Image        string
 	Description  string
@@ -54,8 +54,9 @@ type Donatugee struct {
 	db *gorm.DB
 }
 
-func NewDonatugee() (*Donatugee, error) {
-	db, err := gorm.Open("sqlite3", "db.sqlite")
+func NewDonatugee(dbname string) (*Donatugee, error) {
+	db, err := gorm.Open("sqlite3", dbname)
+	db.Exec("PRAGMA foreign_keys = ON;")
 	if err != nil {
 		return nil, err
 	}
@@ -68,37 +69,23 @@ func (d *Donatugee) GetChallenges() ([]Challenge, error) {
 	return []Challenge{}, nil
 }
 
+func (d *Donatugee) InsertTechfugee(name, email, skills string) []error {
+	techfugee := Techfugee{
+		Name:     name,
+		Email:    email,
+		Skills:   skills,
+		Created:  time.Now(),
+		Modified: time.Now(),
+	}
+
+	return d.db.Create(&techfugee).GetErrors()
+}
+
 func (d *Donatugee) IntializeDB() []error {
-	// .AddForeignKey("applications_refer", "application(application_id)", "RESTRICT", "RESTRICT")
-	errs := d.db.AutoMigrate(&Techfugee{}).GetErrors()
+	errs := d.db.CreateTable(&Techfugee{}, &Donator{}, &Challenge{}, &Application{}).GetErrors()
 	if len(errs) != 0 {
 		return errs
 	}
-
-	errs = d.db.AutoMigrate(&Donator{}).GetErrors()
-	if len(errs) != 0 {
-		return errs
-	}
-
-	errs = d.db.AutoMigrate(&Challenge{}).GetErrors()
-	if len(errs) != 0 {
-		return errs
-	}
-
-	// errs = d.db.AutoMigrate(&Application{}).AddForeignKey("techfugee_id", "techfugees(techfugee_id)", "RESTRICT", "RESTRICT").GetErrors()
-	// if len(errs) != 0 {
-	// 	return errs
-	// }
-
-	// errs = d.db.AutoMigrate(&Challenge{}).GetErrors()
-	// if len(errs) != 0 {
-	// 	return errs
-	// }
-
-	// errs = d.db.Model(&Donator{}).Related(&Item{}).GetErrors()
-	// if len(errs) != 0 {
-	// 	return errs
-	// }
 
 	return nil
 }
