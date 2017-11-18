@@ -17,6 +17,6 @@ func main() {
 	s := NewServer(d)
 	err = s.start()
 	if err != nil {
-		panic(s)
+		panic(err)
 	}
 }
