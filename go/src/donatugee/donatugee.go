@@ -177,9 +177,16 @@ func (d *Donatugee) InsertApplication(techfugee, challenge string) (Application,
 		TechfugeeID: uint(newID1),
 		ChallengeID: uint(newID2),
 	}
-	errs := d.db.Where(&Application{}, "techfugee_id = ? AND challenge_id = ?", newID1, newID2).GetErrors()
+
+	var applications []Application
+
+	errs := d.db.Where(&application, "techfugee_id = ? AND challenge_id = ?", newID1, newID2).Find(&applications).GetErrors()
 	if len(errs) > 0 {
 		return application, errs
+	}
+
+	if len(applications) > 0 {
+		return applications[0], []error{fmt.Errorf("exists already")}
 	}
 
 	return application, d.db.Create(&application).GetErrors()
