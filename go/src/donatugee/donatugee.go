@@ -88,7 +88,10 @@ func (d *Donatugee) Techfugees() ([]Techfugee, []error) {
 
 func (d *Donatugee) UpdateAuth(id string, passed string) (Techfugee, []error) {
 	var techfugee Techfugee
-	newID, _ := strconv.Atoi(id)
+	newID, err := strconv.Atoi(id)
+	if err != nil {
+		return techfugee, []error {err}
+	}
 	errs := d.db.First(&techfugee, "id = ?", newID).GetErrors()
 	if len(errs) > 0 {
 		return techfugee, errs

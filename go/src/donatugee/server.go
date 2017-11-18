@@ -92,6 +92,7 @@ func (s *Server) updateAuth(resp http.ResponseWriter, r *http.Request) {
 	js, err := json.Marshal(techfugee)
 	if err != nil {
 		http.Error(resp, fmt.Sprintf("marshal: %v", errs), http.StatusInternalServerError)
+		return
 	}
 
 	_, _ = resp.Write(js)
