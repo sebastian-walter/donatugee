@@ -51,6 +51,6 @@ export const getDonator = (id) => {
 	}).then(response => response).catch(error => error.response);
 };
 
-export const getRandomText = () => {
-	return axios.get('http://www.randomtext.me/api/gibberish/p-1/10-30').then(response => response).catch(error => error.response);
+export const getRandomText = (length) => {
+	return axios.get('http://www.randomtext.me/api/gibberish/p-1/' + length).then(response => response).catch(error => error.response);
 };

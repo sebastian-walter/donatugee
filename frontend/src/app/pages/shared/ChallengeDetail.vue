@@ -21,14 +21,13 @@
             </v-card-title>
         </v-card>
 
-        <v-btn class="mb-4" :to="{ path: '/refugee/register' }" color="primary">Sign up</v-btn>
+        <v-btn class="mb-4" @click="handleSignUp()" color="primary">Sign up</v-btn>
 
         <v-card>
             <v-card-title>
                 <div><h3 class="headline mb-2">{{ donator.Name }}</h3></div>
                 <v-flex xs2>
                     <v-avatar
-                            :tile="tile"
                             class="grey lighten-4"
                     >
                         <img src="https://lorempixel.com/180/180/cats/" alt="avatar">
@@ -66,9 +65,17 @@
                 });
             });
 
-            getRandomText().then(response => {
+            getRandomText('10-30').then(response => {
                 this.randomText = response.data;
             });
+        },
+        methods: {
+            handleSignUp() {
+                window.localStorage.setItem('idChallenge', this.idChallenge);
+                this.$router.push({
+                    path: '/refugee/register'
+                });
+            }
         }
     }
 </script>
