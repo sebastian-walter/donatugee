@@ -3,12 +3,14 @@ import Vue from 'vue';
 import { maxNumberOfIncorrectAnswers } from '../library/questions';
 import Home from '../app/pages/shared/Home.vue';
 import ChallengeList from '../app/pages/shared/ChallengeList.vue';
+import YourChallengeList from '../app/pages/refugees/YourChallengeList.vue';
 import ChallengeDetail from '../app/pages/shared/ChallengeDetail.vue';
 import RefugeeProfile from '../app/pages/refugees/Profile.vue';
 import CompanyProfile from '../app/pages/companies/Profile.vue';
 import Authentication from '../app/pages/refugees/Authentication.vue';
 import CreateChallenge from '../app/pages/companies/CreateChallenge.vue';
 import RefugeeRegister from '../app/pages/refugees/Register.vue';
+import RefugeeLogin from '../app/pages/refugees/Login.vue';
 import CompanyRegister from '../app/pages/companies/Register.vue';
 import Interests from '../app/pages/refugees/Interests.vue';
 import TechQuestions from '../app/pages/refugees/TechQuestions.vue';
@@ -28,6 +30,10 @@ const routes = [
 		component: ChallengeList,
 	},
 	{
+		path: '/your-challenges',
+		component: YourChallengeList,
+	},
+	{
 		path: '/challenge/:id',
 		component: ChallengeDetail,
 	},
@@ -42,6 +48,10 @@ const routes = [
 	{
 		path: '/refugee/register',
 		component: RefugeeRegister,
+	},
+	{
+		path: '/refugee/login',
+		component: RefugeeLogin,
 	},
 	{
 		path: '/company/register',

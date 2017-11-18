@@ -1,7 +1,7 @@
 <template>
-    <div class="mb-4">
+    <div class="mb-4 challenge-item">
         <v-flex xs12>
-            <v-card :to="{ path: 'challenge/' + challenge.ID }">
+            <v-card :to="{ path: 'challenge/' + challenge.ID }" :class="applied">
                 <v-card-title>
                     <div>
                         <h3 class="headline mb-2">{{ challenge.Name }}</h3>
@@ -20,8 +20,6 @@
                 <v-card-title primary-title class="pt-3">
                     <v-flex xs2>
                         <v-avatar
-                                :tile="tile"
-                                :size="avatarSize"
                                 class="grey lighten-4"
                         >
                             <img src="https://lorempixel.com/180/180/cats/" alt="avatar">
@@ -43,13 +41,36 @@
     export default {
         name: 'ChallengeItem',
         props: {
-            challenge: { type: Object, required: true },
-            donator: { type: Object, required: true }
+            challenge: { type: Object, required: true }
+        },
+        data() {
+            return {
+                donator: { type: Object, required: true },
+                userId: window.localStorage.getItem('userId')
+            }
         },
         mounted() {
             getDonator(this.challenge.DonatorID).then(response => {
                 this.donator = response.data;
             });
+        },
+        computed: {
+            applied() {
+            	if (this.$route.path === '/your-challenges') {
+            		return true;
+                }
+                return (this.challenge.Applications.filter((application) => {
+                    return application.TechfugeeID === parseInt(this.userId);
+                }).length > 0) ? 'applied' : '';
+            }
         }
     }
 </script>
+
+<style scoped lang="scss" text="text/scss">
+    @import '../../../assets/_variables.scss';
+
+    .card.applied {
+        background-color: $grey-lighter;
+    }
+</style>

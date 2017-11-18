@@ -20,6 +20,13 @@
                         :rules="emailRules"
                         required
                 ></v-text-field>
+                <v-text-field
+                        label="Password"
+                        v-model="password"
+                        :rules="passwordRules"
+                        type="password"
+                        required
+                ></v-text-field>
                 <v-btn class="sign-up-button"
                        small
                        color="primary"
@@ -51,6 +58,10 @@
 					(v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
 				],
                 errorMessage: '',
+                password: '',
+				passwordRules: [
+					(v) => !!v || 'Password is required',
+				],
 			}
 		},
         computed: {
@@ -60,8 +71,11 @@
         },
         methods: {
 			signUp() {
-                createProfile({ name: this.name, email: this.email })
-                    .then(response => {
+                createProfile({
+                    name: this.name,
+                    email: this.email,
+                    password: this.password
+                }).then(response => {
                     	if (response.status !== 200) {
                     		this.errorMessage = 'User cannot be created';
                         }
