@@ -24,7 +24,7 @@ func NewServer(donatugee *Donatugee) *Server {
 func (s *Server) start() error {
 	addr := ":8081"
 	if os.Getenv("ENV") == "production" {
-		addr := ":80"
+		addr = ":80"
 	}
 	return http.ListenAndServe(addr, nil)
 }
