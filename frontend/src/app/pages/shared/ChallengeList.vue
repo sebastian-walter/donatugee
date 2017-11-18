@@ -2,36 +2,38 @@
     <div>
         <h1>Discover Challenges</h1>
         <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,</p>
-        <challenge-item></challenge-item>
-        <challenge-item></challenge-item>
+        <challenge-item v-for="challenges in challenge" key="challenges"></challenge-item>
     </div>
 </template>
 <script>
-    import axios from 'axios';
+    import { getChallenges } from '../../api/api';
     import ChallengeItem from '../../components/challenge-item/ChallengeItem.vue';
 
     export default {
     	name: 'ChallengeList',
         data() {
             return {
-                challenges
+<<<<<<< HEAD
+                challenges: [],
+=======
+                challenges: []
+>>>>>>> bf1be1f9e26414f168c487d773bfc63c47b3f2cb
             };
         },
         mounted() {
-            axios.get('')
-                .then(response => {
-                this.challenges = response.data
-            })
-            .catch(e => {
-                console.error(e);
-            })
+            getChallenges().then(response => {
+                this.challenges = response.data;
+            });
         },
         methods: {
 
         },
         components: {
+<<<<<<< HEAD
+            ChallengeItem,
+=======
             ChallengeItem
-            axios
+>>>>>>> bf1be1f9e26414f168c487d773bfc63c47b3f2cb
         }
     }
 </script>
