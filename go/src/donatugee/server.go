@@ -66,7 +66,7 @@ func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request
 	return http.HandlerFunc(fn)
 }
 
-func GetChallenges(s *Server) func(resp http.ResponseWriter, r *http.Request) {
+func GetChallenges(resp http.ResponseWriter, r *http.Request) {
 	application := Application{
 		ApplicationID: 1,
 		Created:       time.Now(),
