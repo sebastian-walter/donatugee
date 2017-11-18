@@ -21,8 +21,6 @@
         mounted() {
             getChallenges().then(response => {
                 this.challenges = response.data;
-            }).catch(e => {
-                console.error(e);
             });
         },
         methods: {

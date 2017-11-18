@@ -38,7 +38,15 @@ export const getChallenge = (id) => {
 export const getTechfugee = (id) => {
 	return HTTPS.get('techfugee', {
 		params: {
-			id,
+			id
+		}
+	}).then(response => response).catch(error => error.response);
+};
+
+export const getDonator = (id) => {
+	return HTTPS.get('donator', {
+		params: {
+			id
 		}
 	}).then(response => response).catch(error => error.response);
 };
@@ -51,4 +59,7 @@ export const saveFurtherDetails = ({ id, city, introduction }) => {
 			introduction
 		}
 	}).then(response => response).catch(error => error.response);
+};
+export const getRandomText = () => {
+	return axios.get('http://www.randomtext.me/api/gibberish/p-1/10-30').then(response => response).catch(error => error.response)
 };

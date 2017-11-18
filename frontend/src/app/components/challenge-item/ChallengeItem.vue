@@ -1,7 +1,7 @@
 <template>
     <div class="mb-4">
         <v-flex xs12>
-            <v-card :to="{ path: 'challenge/' + challenge.ChallengeID }">
+            <v-card :to="{ path: 'challenge/' + challenge.ID }">
                 <v-card-title>
                     <div>
                         <h3 class="headline mb-2">{{ challenge.Name }}</h3>
@@ -28,8 +28,8 @@
                         </v-avatar>
                     </v-flex>
                     <v-flex xs9 offset-xs1>
-                        <h3 class="mb-0">Trivago</h3>
-                        <div>Location</div>
+                        <h3 class="mb-0">{{ donator.Name }}</h3>
+                        <div>Düsseldorf, Germany</div>
                     </v-flex>
                 </v-card-title>
             </v-card>
@@ -38,10 +38,18 @@
 </template>
 
 <script>
+    import { getDonator } from '../../api/api';
+
     export default {
         name: 'ChallengeItem',
         props: {
-            challenge: { type: Object, required: true }
+            challenge: { type: Object, required: true },
+            donator: { type: Object, required: true }
+        },
+        mounted() {
+            getDonator(this.challenge.DonatorID).then(response => {
+                this.donator = response.data;
+            });
         }
     }
 </script>
