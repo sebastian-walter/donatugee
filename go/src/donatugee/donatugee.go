@@ -80,6 +80,18 @@ func (d *Donatugee) Techfugees() ([]Techfugee, []error) {
 
 }
 
+func (d *Donatugee) UpdateAuth(idTechfugee uint, passed string) (Techfugee, []error) {
+	var techfugee Techfugee
+	errs := d.db.First(&techfugee, "id = ?", idTechfugee).GetErrors()
+	if len(errs) > 0 {
+		return techfugee, errs
+	}
+
+	techfugee.Authenticated = passed
+
+	return techfugee, d.db.Save(&techfugee).GetErrors()
+}
+
 func (d *Donatugee) Challenges() ([]Challenge, error) {
 	return []Challenge{}, nil
 }

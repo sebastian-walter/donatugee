@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 
+	"strconv"
+
 	"github.com/rs/cors"
 )
 
@@ -32,6 +34,7 @@ func (s *Server) start() error {
 	mux.HandleFunc("/api/v1/challenges", s.challenges)
 	mux.HandleFunc("/api/v1/insert-techfugee", s.insertTechfugee)
 	mux.HandleFunc("/api/v1/techfugees", s.techfugees)
+	mux.HandleFunc("/api/v1/update-auth", s.updateAuth)
 
 	mux.Handle("/public", http.FileServer(http.Dir("./frontend/public")))
 	mux.Handle("/dist", http.FileServer(http.Dir("./frontend/dist")))
@@ -48,6 +51,25 @@ func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request
 	}
 
 	return http.HandlerFunc(fn)
+}
+
+func (s *Server) updateAuth(resp http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+	passed := r.FormValue("passed")
+
+	idTechfugee, err := strconv.ParseUint(id, 10, 64)
+	techfugee, errs := s.donatugee.UpdateAuth(uint(idTechfugee), passed)
+	if len(errs) > 0 {
+		http.Error(resp, fmt.Sprintf("update: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(techfugee)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", errs), http.StatusInternalServerError)
+	}
+
+	_, _ = resp.Write(js)
 }
 
 func (s *Server) techfugees(resp http.ResponseWriter, r *http.Request) {
