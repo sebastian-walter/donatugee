@@ -38,6 +38,7 @@ func (s *Server) start() error {
 	mux.HandleFunc("/api/v1/donator", s.donator)
 	mux.HandleFunc("/api/v1/update-auth", s.updateAuth)
 	mux.HandleFunc("/api/v1/add-skills", s.addSkills)
+	mux.HandleFunc("/api/v1/insert-challenge", s.insertChallenge)
 
 	mux.Handle("/public", http.FileServer(http.Dir("./frontend/public")))
 	mux.Handle("/dist", http.FileServer(http.Dir("./frontend/dist")))
@@ -182,7 +183,7 @@ func (s *Server) donator(resp http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) challenge(resp http.ResponseWriter, r *http.Request) {
-	id := r.FormValue("id")
+	id := r.FormValue("id_donator")
 
 	challenge, errs := s.donatugee.Challenge(id)
 	if len(errs) != 0 {
