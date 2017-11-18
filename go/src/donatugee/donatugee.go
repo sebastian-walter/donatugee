@@ -84,6 +84,13 @@ func NewDonatugee(dbname string) (*Donatugee, error) {
 	}, nil
 }
 
+func (d *Donatugee) Techfugees() ([]Techfugee, []error) {
+	var techfugees []Techfugee
+	errs := d.db.Debug().Find(&techfugees).GetErrors()
+	return techfugees, errs
+
+}
+
 func (d *Donatugee) Challenges() ([]Challenge, error) {
 	return []Challenge{}, nil
 }

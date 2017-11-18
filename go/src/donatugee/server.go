@@ -26,14 +26,17 @@ func (s *Server) start() error {
 		addr = os.Getenv("PORT")
 	}
 
-	http.HandleFunc("/api/v1/challenges", s.challenges)
-	http.HandleFunc("/api/v1/insert-techfugee", s.insertTechfugee)
+	mux := http.NewServeMux()
 
-	http.Handle("/public", http.FileServer(http.Dir("./frontend/public")))
-	http.Handle("/dist", http.FileServer(http.Dir("./frontend/dist")))
-	http.Handle("/", http.FileServer(http.Dir("./frontend")))
+	mux.HandleFunc("/api/v1/challenges", s.challenges)
+	mux.HandleFunc("/api/v1/insert-techfugee", s.insertTechfugee)
+	mux.HandleFunc("/api/v1/techfugees", s.techfugees)
 
-	return http.ListenAndServe(":"+addr, nil)
+	mux.Handle("/public", http.FileServer(http.Dir("./frontend/public")))
+	mux.Handle("/dist", http.FileServer(http.Dir("./frontend/dist")))
+	mux.Handle("/", http.FileServer(http.Dir("./frontend")))
+
+	return http.ListenAndServe(":"+addr, mux)
 }
 
 func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request) {
@@ -42,6 +45,20 @@ func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request
 	}
 
 	return http.HandlerFunc(fn)
+}
+
+func (s *Server) techfugees(resp http.ResponseWriter, r *http.Request) {
+	techfugees, errs := s.donatugee.Techfugees()
+	if errs != nil {
+		http.Error(resp, fmt.Sprintf("query: %v", errs), http.StatusInternalServerError)
+	}
+
+	js, err := json.Marshal(techfugees)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+	}
+
+	_, _ = resp.Write(js)
 }
 
 func (s *Server) insertTechfugee(resp http.ResponseWriter, r *http.Request) {

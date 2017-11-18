@@ -9,6 +9,7 @@ import Authentication from '../app/pages/refugees/Authentication.vue';
 import CreateChallenge from '../app/pages/companies/CreateChallenge.vue';
 import RefugeeRegister from '../app/pages/refugees/Register.vue';
 import CompanyRegister from '../app/pages/companies/Register.vue';
+import Interests from '../app/pages/refugees/Interests.vue';
 
 Vue.use(Router);
 
@@ -48,6 +49,10 @@ const routes = [
 	{
 		path: '/authentication/:question',
 		component: Authentication,
+	},
+	{
+		path: '/interests/add/:idUser',
+		component: Interests,
 	},
 ];
 
