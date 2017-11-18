@@ -47,7 +47,6 @@
         },
         methods: {
     		save() {
-    			debugger;
     			saveFurtherDetails({
                     id: window.localStorage.getItem('id'),
                     city: this.city,

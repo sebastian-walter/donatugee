@@ -63,3 +63,12 @@ export const saveFurtherDetails = ({ id, city, introduction }) => {
 export const getRandomText = () => {
 	return axios.get('http://www.randomtext.me/api/gibberish/p-1/10-30').then(response => response).catch(error => error.response)
 };
+
+export const techfugeeAuthenticated = ({ id, passed }) => {
+	return HTTPS.get('update-auth', {
+		params: {
+			id: id,
+			passed: passed
+		}
+	}).then(response => response).catch(error => error.response)
+};

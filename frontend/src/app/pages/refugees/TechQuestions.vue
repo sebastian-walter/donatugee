@@ -22,7 +22,6 @@
             </ul>
             <v-divider></v-divider>
             <v-card-actions>
-                <template v-if="noMoreQuestions && !isAnswered">
                     <v-btn flat
                            color="primary"
                            @click="evaluate"
@@ -33,16 +32,14 @@
                     <v-btn flat
                            color="primary"
                            @click="nextQuestion"
-                           v-if="isAnswered"
+                           v-if="isAnswered && !noMoreQuestions"
                     >
                         Next question
                     </v-btn>
-
-                </template>
                 <v-btn flat
                        color="primary"
                        @click="nextSection"
-                       v-else
+                       v-if="noMoreQuestions && isAnswered"
                 >
                     Continue
                 </v-btn>
@@ -53,6 +50,7 @@
 
 <script>
 	import {questions, maxNumberOfIncorrectAnswers} from '../../../library/questions';
+	import { techfugeeAuthenticated } from '../../api/api';
 
 	export default {
 		name: 'TechQuestions',
@@ -72,7 +70,7 @@
 				return this.$route.params.step;
 			},
             noMoreQuestions() {
-				return this.steps === this.techQuestions.length
+				return parseInt(this.step) === questions.length;
             },
 		},
 		methods: {
@@ -92,7 +90,6 @@
 			},
 			evaluate() {
 				this.isAnswered = true;
-				debugger;
 
 				if (this.selectedAnswer !== this.techQuestions.correctAnswerIndex) {
 					let wrongAnswers = parseInt(window.localStorage.getItem('wrongAnswers'));
@@ -123,8 +120,18 @@
 				});
             },
             nextSection() {
-				this.$router.push({
-                    path: '/further-details',
+				techfugeeAuthenticated({
+                    id: window.localStorage.getItem('userId'),
+                    passed: true
+				}).then(response => {
+					if (response.status === 200) {
+						this.$router.push({
+							path: '/further-details',
+						});
+						return;
+                    }
+
+                    this.errorMessage = 'Ooops, something went wrong. Please try again.';
                 })
             }
 		},
