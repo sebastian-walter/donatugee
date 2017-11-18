@@ -75,3 +75,13 @@ export const techfugeeAuthenticated = ({ id, passed }) => {
 		}
 	}).then(response => response).catch(error => error.response)
 };
+
+export const setApplication = (challengeId, techfugeeId) => {
+	return HTTPS.get('insert-application', {
+		params: {
+			'challenge_id': challengeId,
+			'techfugee_id': techfugeeId
+		}
+	}).then(response => response).catch(error => error.response);
+};
+
