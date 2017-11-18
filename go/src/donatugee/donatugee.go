@@ -187,7 +187,7 @@ func (d *Donatugee) InsertApplication(techfugee, challenge string) (Application,
 
 func (d *Donatugee) InsertDonator(name, email, profile, image string) (Donator, []error) {
 	donator := Donator{}
-	errs := d.db.Where(&Donator{}, "email = ?", email).GetErrors()
+	errs := d.db.Where(&donator, "email = ?", email).GetErrors()
 	if len(errs) > 0 {
 		return donator, errs
 	}

@@ -10,7 +10,7 @@
                 </div>
             </v-card-title>
             <v-list>
-                <v-list-tile v-for="skill in skills">
+                <v-list-tile v-for="skill in skills" :key="skill.name">
                     <v-list-tile-action>
                         <v-checkbox
                                 v-model="skill.value"
@@ -85,7 +85,7 @@
 						window.localStorage.setItem('skills', response.data.Skills);
 
 						return this.$router.push({
-							path: '/tech-questions/' + skills[0] + '?step=1',
+							path: '/tech-questions/1',
 						});
 					});
 			},
