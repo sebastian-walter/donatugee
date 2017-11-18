@@ -36,7 +36,7 @@ func (s *Server) start() error {
 
 	// It's important that this is before your catch-all route ("/")
 	api := r.PathPrefix("/api/v1/").Subrouter()
-	api.HandleFunc("/challenges", challenges).Methods("GET")
+	api.HandleFunc("/challenges", GetChallenges).Methods("GET")
 	// Optional: Use a custom 404 handler for our API paths.
 	// api.NotFoundHandler = JSONNotFound
 
@@ -66,7 +66,7 @@ func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request
 	return http.HandlerFunc(fn)
 }
 
-func (s *Server) challenges(resp http.ResponseWriter, r *http.Request) {
+func GetChallenges(s *Server) func(resp http.ResponseWriter, r *http.Request) {
 	application := Application{
 		ApplicationID: 1,
 		Created:       time.Now(),
