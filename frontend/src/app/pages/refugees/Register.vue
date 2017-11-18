@@ -4,6 +4,9 @@
             <h1>
                 Sign up
             </h1>
+            <v-alert v-if="errorMessage !== ''" color="error" icon="warning" value="true">
+                {{ this.errorMessage }}
+            </v-alert>
             <v-form v-model="valid">
                 <v-text-field
                         label="Name"
@@ -31,6 +34,8 @@
     </div>
 </template>
 <script>
+    import { createProfile } from '../../api/api';
+
 	export default {
 		name: 'Register',
 		data () {
@@ -45,16 +50,32 @@
 				emailRules: [
 					(v) => !!v || 'E-mail is required',
 					(v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
-				]
+				],
+                errorMessage: '',
 			}
 		},
+        computed: {
+		    disabled() {
+		    	return !this.valid;
+            }
+        },
         methods: {
 			signUp() {
+                createProfile({ name: this.name, email: this.email })
+                    .then(response => {
+                    	if (response.status !== 200) {
+                    		this.errorMessage = 'User cannot be created';
+                        }
 
+                        return this.$router.push({
+                            path: '/authentication',
+                        });
+                    })
             }
         }
 	};
 </script>
+
 <style lang="scss" type="text/scss">
     .sign-up-button {
         width: 100%;

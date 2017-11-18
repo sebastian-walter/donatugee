@@ -1,8 +1,6 @@
 package main
 
 import (
-	"time"
-
 	"fmt"
 	"os"
 
@@ -14,20 +12,15 @@ type Application struct {
 	ApplicationID uint
 	TechfugeeID   uint `sql:"type: integer REFERENCES techfugees(id)"`
 	ChallengeID   uint `sql:"type: integer REFERENCES challenges(id)"`
-
-	Created  time.Time
-	Modified time.Time
 }
 
 type Donator struct {
 	gorm.Model
 	Challenges []Challenge `gorm:"ForeignKey:ID"`
 
-	Name     string
-	Profile  string
-	Image    string
-	Created  time.Time
-	Modified time.Time
+	Name    string
+	Profile string
+	Image   string
 }
 
 type Techfugee struct {
@@ -37,8 +30,6 @@ type Techfugee struct {
 	Email         string
 	Skills        string
 	Authenticated string
-	Created       time.Time
-	Modified      time.Time
 }
 
 type Challenge struct {
@@ -49,8 +40,6 @@ type Challenge struct {
 	Name         string
 	Image        string
 	Description  string
-	Created      time.Time
-	Modified     time.Time
 }
 
 type Donatugee struct {
@@ -58,7 +47,7 @@ type Donatugee struct {
 }
 
 func OpenDatabase(dbname string) (db *gorm.DB, err error) {
-	if os.Getenv("ENV") == "production" {
+	if os.Getenv("DB") == "postgres" {
 		db, err := gorm.Open("postgres",
 			fmt.Sprintf("host=%s user=%s dbname=%s sslmode=require password=%s",
 				os.Getenv("P_HOST"),
@@ -78,30 +67,45 @@ func NewDonatugee(dbname string) (*Donatugee, error) {
 	if err != nil {
 		return nil, err
 	}
-	db.AutoMigrate(&Donatugee{})
+
 	return &Donatugee{
 		db: db,
 	}, nil
+}
+
+func (d *Donatugee) Techfugees() ([]Techfugee, []error) {
+	var techfugees []Techfugee
+	errs := d.db.Debug().Find(&techfugees).GetErrors()
+	return techfugees, errs
+
 }
 
 func (d *Donatugee) Challenges() ([]Challenge, error) {
 	return []Challenge{}, nil
 }
 
-func (d *Donatugee) InsertTechfugee(name, email, skills string) []error {
-	techfugee := Techfugee{
-		Name:     name,
-		Email:    email,
-		Skills:   skills,
-		Created:  time.Now(),
-		Modified: time.Now(),
+func (d *Donatugee) InsertTechfugee(name, email, skills string) (Techfugee, []error) {
+	techfugee := Techfugee{}
+	errs := d.db.Where(&Techfugee{}, "email = ?", email).GetErrors()
+	if len(errs) > 0 {
+		return techfugee, errs
 	}
 
-	return d.db.Create(&techfugee).GetErrors()
+	if techfugee.Email == email {
+		return techfugee, nil
+	}
+
+	techfugee = Techfugee{
+		Name:   name,
+		Email:  email,
+		Skills: skills,
+	}
+
+	return techfugee, d.db.Create(&techfugee).GetErrors()
 }
 
 func (d *Donatugee) IntializeDB() []error {
-	errs := d.db.CreateTable(&Techfugee{}, &Donator{}, &Challenge{}, &Application{}).GetErrors()
+	errs := d.db.AutoMigrate(&Techfugee{}, &Donator{}, &Challenge{}, &Application{}).GetErrors()
 	if len(errs) != 0 {
 		return errs
 	}
