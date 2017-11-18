@@ -139,13 +139,18 @@ func (d *Donatugee) UpdateTechfugeeSkills(techfugee Techfugee, skills string) (T
 }
 
 func (d *Donatugee) UpdateTechfugee(id, city, introduction string) (Techfugee, []error) {
-	var techfugee Techfugee
+	var techfugees []Techfugee
 
-	errs := d.db.Where(&techfugee, "id = ?", id).GetErrors()
+	errs := d.db.Find(&techfugees, "id = ?", id).GetErrors()
 	if len(errs) > 0 {
 		return techfugee, errs
 	}
 
+	if len(techfugees) == 0 {
+		return Techfugee{}, []errors{fmt.Errorf("no such techfugee: %s", id)}
+	}
+
+	techfugee := techfugees[0]
 	techfugee.City = city
 	techfugee.Introduction = introduction
 	return techfugee, d.db.Save(&techfugee).GetErrors()
