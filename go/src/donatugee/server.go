@@ -36,7 +36,9 @@ func (s *Server) start() error {
 	mux.Handle("/dist", http.FileServer(http.Dir("./frontend/dist")))
 	mux.Handle("/", http.FileServer(http.Dir("./frontend")))
 
-	return http.ListenAndServe(":"+addr, mux)
+	handler := cors.Default().Handler(mux)
+
+	return http.ListenAndServe(":"+addr, handler)
 }
 
 func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request) {
