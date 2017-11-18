@@ -84,8 +84,31 @@
 
 						window.localStorage.setItem('skills', response.data.Skills);
 
+						if (!authenticated) {
+							return this.$router.push({
+								path: '/tech-questions/1',
+							});
+						}
+
+						if (window.localStorage.getItem('introduction') === '' ||
+                            window.localStorage.getItem('city') === '') {
+							return this.$router.push({
+								path: 'refugee/further-actions',
+							});
+						}
+
+						const idChallenge = window.localStorage.getItem('idChallenge');
+						if (idChallenge === null) {
+							this.$router.push({
+								path: '/challenges',
+							});
+						}
+
 						return this.$router.push({
-							path: '/tech-questions/1',
+							path: '/challenge',
+							params: {
+								id: idChallenge,
+							}
 						});
 					});
 			},

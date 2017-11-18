@@ -74,14 +74,45 @@
 						this.errorMessage = 'User cannot be created';
 					}
 
+					const authenticated = JSON.parse(response.data.Authenticated);
+
 					window.localStorage.setItem('userId', response.data.ID);
 					window.localStorage.setItem('email', response.data.Email);
 					window.localStorage.setItem('name', response.data.Name);
 					window.localStorage.setItem('skills', response.data.Skills);
 					window.localStorage.setItem('wrongAnswers', 0);
+					window.localStorage.setItem('authenticated', authenticated);
+
+					if (Object.keys(JSON.parse(window.localStorage.getItem('skills'))).length === 0) {
+						return this.$router.push({
+							path: '/interests/add/' + response.data.ID,
+						});
+                    }
+
+					if (!authenticated) {
+						return this.$router.push({
+							path: '/tech-questions/1',
+						});
+                    }
+
+					if (!response.data.Introduction === '' || response.data.City === '') {
+						return this.$router.push({
+							path: 'refugee/further-actions',
+						});
+					}
+
+					const idChallenge = window.localStorage.getItem('idChallenge');
+					if (idChallenge === null) {
+						this.$router.push({
+                            path: '/challenges',
+                        });
+                    }
 
 					return this.$router.push({
-						path: '/interests/add/' + response.data.ID,
+						path: '/challenge',
+                        params: {
+							id: idChallenge,
+                        }
 					});
 				})
 			}
