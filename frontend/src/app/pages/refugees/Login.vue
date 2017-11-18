@@ -2,18 +2,12 @@
     <div>
         <v-flex xs12>
             <h1>
-                Sign up
+                Log In
             </h1>
             <v-alert v-if="errorMessage !== ''" color="error" icon="warning" value="true">
                 {{ this.errorMessage }}
             </v-alert>
             <v-form v-model="valid">
-                <v-text-field
-                        label="Name"
-                        v-model="name"
-                        :rules="nameRules"
-                        required
-                ></v-text-field>
                 <v-text-field
                         label="E-mail"
                         v-model="email"
@@ -34,17 +28,17 @@
                        large
                        @click="signUp"
                 >
-                    Sign up
+                    Log In
                 </v-btn>
             </v-form>
         </v-flex>
     </div>
 </template>
 <script>
-    import { createProfile } from '../../api/api';
+	import { createProfile } from '../../api/api';
 
 	export default {
-		name: 'Register',
+		name: 'Login',
 		data () {
 			return {
 				valid: false,
@@ -57,41 +51,41 @@
 					(v) => !!v || 'E-mail is required',
 					(v) => /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid'
 				],
-                errorMessage: '',
-                password: '',
+				errorMessage: '',
+				password: '',
 				passwordRules: [
 					(v) => !!v || 'Password is required',
 				],
 			}
 		},
-        computed: {
-		    disabled() {
-		    	return !this.valid;
-            }
-        },
-        methods: {
+		computed: {
+			disabled() {
+				return !this.valid;
+			}
+		},
+		methods: {
 			signUp() {
-                createProfile({
-                    name: this.name,
-                    email: this.email,
-                    password: this.password
-                }).then(response => {
-                    	if (response.status !== 200) {
-                    		this.errorMessage = 'User cannot be created';
-                        }
+				createProfile({
+					name: this.name,
+					email: this.email,
+					password: this.password
+				}).then(response => {
+					if (response.status !== 200) {
+						this.errorMessage = 'User cannot be created';
+					}
 
-                        window.localStorage.setItem('userId', response.data.ID);
-						window.localStorage.setItem('email', response.data.Email);
-						window.localStorage.setItem('name', response.data.Name);
-						window.localStorage.setItem('skills', response.data.Skills);
-						window.localStorage.setItem('wrongAnswers', 0);
+					window.localStorage.setItem('userId', response.data.ID);
+					window.localStorage.setItem('email', response.data.Email);
+					window.localStorage.setItem('name', response.data.Name);
+					window.localStorage.setItem('skills', response.data.Skills);
+					window.localStorage.setItem('wrongAnswers', 0);
 
-                        return this.$router.push({
-                            path: '/interests/add/' + response.data.ID,
-                        });
-                    })
-            }
-        }
+					return this.$router.push({
+						path: '/interests/add/' + response.data.ID,
+					});
+				})
+			}
+		}
 	};
 </script>
 
