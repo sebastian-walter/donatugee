@@ -1,6 +1,10 @@
 <template>
     <layout>
-        <router-view slot="content"></router-view>
+        <template slot="content">
+            <transition name="fade">
+                <router-view :key="$route.params.step"></router-view>
+            </transition>
+        </template>
     </layout>
 </template>
 
@@ -29,4 +33,19 @@
 	}
 </script>
 
-<style lang="scss" type="text/scss">@import '../assets/index.scss';</style>
+<style lang="scss" type="text/scss">
+    @import '../assets/index.scss';
+
+    .fade-enter-active, .fade-leave-active {
+        transition-property: opacity;
+        transition-duration: .25s;
+    }
+
+    .fade-enter-active {
+        transition-delay: .25s;
+    }
+
+    .fade-enter, .fade-leave-active {
+        opacity: 0
+    }
+</style>

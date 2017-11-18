@@ -21,7 +21,9 @@
             </v-card-title>
         </v-card>
 
-        <v-btn class="mb-4" @click="handleSignUp()" color="primary">Sign up</v-btn>
+        <v-btn v-if="!userId" class="mb-4" @click="handleSignUp()" color="primary">Sign up</v-btn>
+        <v-btn v-if="userId" class="mb-4" @click="handleApply()" color="primary">Apply</v-btn>
+        <v-btn v-if="userId && donator.Applications" class="mb-4" color="primary" disabled>Already applied</v-btn>
 
         <v-card>
             <v-card-title>
@@ -44,7 +46,7 @@
     </div>
 </template>
 <script>
-    import { getChallenge, getDonator, getRandomText } from '../../api/api';
+    import { getChallenge, getDonator, getRandomText, setApplication } from '../../api/api';
 
     export default {
     	name: 'ChallengeDetail',
@@ -53,7 +55,9 @@
     		    idChallenge: this.$route.params.id,
                 challenge: {},
                 donator: {},
-                randomText: ''
+                randomText: '',
+
+                userId: window.localStorage.getItem('userId')
             }
         },
         mounted() {
@@ -75,6 +79,10 @@
                 this.$router.push({
                     path: '/refugee/register'
                 });
+            },
+
+            handleApply() {
+                setApplication(this.challenge.ID, this.donator.ID);
             }
         }
     }

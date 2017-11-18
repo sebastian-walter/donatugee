@@ -60,10 +60,28 @@ export const getDonator = (id) => {
 			id,
 		}
 	}).then(response => response).catch(error => error.response);
-}
+};
 
 
 export const getRandomText = (length) => {
 	return axios.get('http://www.randomtext.me/api/gibberish/p-1/' + length).then(response => response).catch(error => error.response);
+};
+
+export const techfugeeAuthenticated = ({ id, passed }) => {
+	return HTTPS.get('update-auth', {
+		params: {
+			id: id,
+			passed: passed
+		}
+	}).then(response => response).catch(error => error.response)
+};
+
+export const setApplication = (challengeId, techfugeeId) => {
+	return HTTPS.get('insert-application', {
+		params: {
+			'challenge_id': challengeId,
+			'techfugee_id': techfugeeId
+		}
+	}).then(response => response).catch(error => error.response);
 };
 
