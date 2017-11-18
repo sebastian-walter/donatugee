@@ -149,11 +149,11 @@ func (d *Donatugee) UpdateTechfugee(id, city, introduction string) (Techfugee, [
 
 	errs := d.db.Find(&techfugees, "id = ?", id).GetErrors()
 	if len(errs) > 0 {
-		return techfugee, errs
+		return Techfugee{}, errs
 	}
 
 	if len(techfugees) == 0 {
-		return Techfugee{}, []errors{fmt.Errorf("no such techfugee: %s", id)}
+		return Techfugee{}, []error{fmt.Errorf("no such techfugee: %s", id)}
 	}
 
 	techfugee := techfugees[0]
