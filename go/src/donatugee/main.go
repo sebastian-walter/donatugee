@@ -17,9 +17,9 @@ func main() {
 		panic(fmt.Sprintf("%v", errs))
 	}
 
-	// s := NewServer(d)
-	// err = s.start()
-	// if err != nil {
-	// 	panic(s)
-	// }
+	s := NewServer(d)
+	err = s.start()
+	if err != nil {
+		panic(s)
+	}
 }
