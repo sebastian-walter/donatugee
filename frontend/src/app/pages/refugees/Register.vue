@@ -26,7 +26,6 @@
                        dark
                        large
                        @click="signUp"
-                       :disabled="disabled"
                 >
                     Sign up
                 </v-btn>
@@ -55,6 +54,11 @@
                 errorMessage: '',
 			}
 		},
+        computed: {
+		    disabled() {
+		    	return !this.valid;
+            }
+        },
         methods: {
 			signUp() {
                 createProfile({ name: this.name, email: this.email })
