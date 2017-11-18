@@ -34,7 +34,7 @@ func (s *Server) start() error {
 	mux.HandleFunc("/api/v1/insert-donator", s.InsertDonator)
 	mux.HandleFunc("/api/v1/techfugees", s.techfugees)
 	mux.HandleFunc("/api/v1/techfugee", s.techfugee)
-	mux.HandleFunc("/api/v1/challenge", s.donator)
+	mux.HandleFunc("/api/v1/challenge", s.challenge)
 	mux.HandleFunc("/api/v1/donator", s.donator)
 	mux.HandleFunc("/api/v1/update-auth", s.updateAuth)
 	mux.HandleFunc("/api/v1/add-skills", s.addSkills)
@@ -243,7 +243,6 @@ func (s *Server) addSkills(resp http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) challenges(resp http.ResponseWriter, r *http.Request) {
-
 	challenges, errs := s.donatugee.Challenges()
 	if len(errs) != 0 {
 		http.Error(resp, fmt.Sprintf("challenges: %v", errs), http.StatusInternalServerError)
