@@ -101,6 +101,11 @@ func (d *Donatugee) UpdateAuth(id string, passed string) (Techfugee, []error) {
 	return techfugee, d.db.Save(&techfugee).GetErrors()
 }
 
+func (d *Donatugee) ApplicatonByTechfugee(idTechfugee string) ([]Application, []error) {
+	var applications []Application
+	return applications, d.db.Preload("Challenges").Where(applications, "techfugee_id = ?", idTechfugee).GetErrors()
+}
+
 func (d *Donatugee) Challenges() ([]Challenge, []error) {
 	var challenges []Challenge
 	errs := d.db.Preload("Applications").Find(&challenges).GetErrors()

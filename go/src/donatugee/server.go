@@ -42,6 +42,7 @@ func (s *Server) start() error {
 	mux.HandleFunc("/api/v1/insert-challenge", s.insertChallenge)
 	mux.HandleFunc("/api/v1/update-techfugee", s.updateTechfugee)
 	mux.HandleFunc("/api/v1/insert-application", s.insertApplication)
+	mux.HandleFunc("/api/v1/application-by-techfugee", s.applicationByTechfugee)
 
 	mux.Handle("/public", http.FileServer(http.Dir("./frontend/public")))
 	mux.Handle("/dist", http.FileServer(http.Dir("./frontend/dist")))
@@ -58,6 +59,22 @@ func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request
 	}
 
 	return http.HandlerFunc(fn)
+}
+
+func (s *Server) applicationByTechfugee(resp http.ResponseWriter, r *http.Request) {
+	idTechfugee := r.FormValue("id_techfugee")
+
+	applications, errs := s.donatugee.ApplicatonByTechfugee(idTechfugee)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("query: %v", errs), http.StatusInternalServerError)
+	}
+
+	js, err := json.Marshal(applications)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+	}
+
+	_, _ = resp.Write(js)
 }
 
 func (s *Server) insertChallenge(resp http.ResponseWriter, r *http.Request) {
