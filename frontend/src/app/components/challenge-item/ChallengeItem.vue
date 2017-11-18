@@ -1,7 +1,7 @@
 <template>
     <div class="mb-4">
         <v-flex xs12>
-            <v-card :to="{ path: 'challenge/' + challenge.ID }">
+            <v-card :to="{ path: 'challenge/' + challenge.ID }" :class="applied">
                 <v-card-title>
                     <div>
                         <h3 class="headline mb-2">{{ challenge.Name }}</h3>
@@ -45,13 +45,29 @@
         },
         data() {
             return {
-                donator: { type: Object, required: true }
+                donator: { type: Object, required: true },
+                userId: window.localStorage.getItem('userId')
             }
         },
         mounted() {
             getDonator(this.challenge.DonatorID).then(response => {
                 this.donator = response.data;
             });
+        },
+        computed: {
+            applied() {
+                return (this.challenge.Applications.filter((application) => {
+                    return application.TechfugeeID === parseInt(this.userId);
+                }).length > 0) ? 'applied' : '';
+            }
         }
     }
 </script>
+
+<style scoped lang="scss" text="text/scss">
+    @import '../../../assets/_variables.scss';
+
+    .card.applied {
+        background-color: $grey-lighter;
+    }
+</style>
