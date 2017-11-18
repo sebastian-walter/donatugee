@@ -56,7 +56,7 @@ type Donatugee struct {
 func OpenDatabase() (db *gorm.DB, err error) {
 	if os.Getenv("ENV") == "production" {
 		db, err := gorm.Open("postgres",
-			fmt.Sprintf("host=%s user=%s dbname=%s sslmode=enable password=%s",
+			fmt.Sprintf("host=%s user=%s dbname=%s sslmode=require password=%s",
 				os.Getenv("P_HOST"),
 				os.Getenv("P_USER"),
 				os.Getenv("P_DB"),
