@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"time"
 )
 
 type Server struct {
@@ -66,20 +65,23 @@ func (s *Server) insertTechfugee(resp http.ResponseWriter, r *http.Request) {
 	email := r.FormValue("email")
 	skills := r.FormValue("skills")
 
-	errs := s.donatugee.InsertTechfugee(name, email, skills)
+	techfugee, errs := s.donatugee.InsertTechfugee(name, email, skills)
 	if len(errs) != 0 {
-		http.Error(resp, fmt.Sprintf("%v", errs), http.StatusInternalServerError)
+		http.Error(resp, fmt.Sprintf("insert: %v", errs), http.StatusInternalServerError)
 		return
 	}
 
-	_, _ = resp.Write([]byte("success"))
+	js, err := json.Marshal(techfugee)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+	}
+
+	_, _ = resp.Write(js)
 }
 
 func (s *Server) challenges(resp http.ResponseWriter, r *http.Request) {
 	application := Application{
 		ApplicationID: 1,
-		Created:       time.Now(),
-		Modified:      time.Now(),
 	}
 
 	// techfugee := Techfugee{
@@ -98,8 +100,6 @@ func (s *Server) challenges(resp http.ResponseWriter, r *http.Request) {
 			Name:         "Learn PHP in 3 month",
 			Image:        "",
 			Description:  "go to laracast, learn PHP and pitch us what you learned",
-			Created:      time.Now(),
-			Modified:     time.Now(),
 		},
 		Challenge{
 			ChallengeID:  2,
@@ -107,8 +107,6 @@ func (s *Server) challenges(resp http.ResponseWriter, r *http.Request) {
 			Name:         "Learn Go in 3 month",
 			Image:        "",
 			Description:  "go to the Go tour, learn Go and create a small Go app",
-			Created:      time.Now(),
-			Modified:     time.Now(),
 		},
 	}
 
