@@ -42,3 +42,13 @@ export const getTechfugee = (id) => {
 		}
 	}).then(response => response).catch(error => error.response);
 };
+
+export const saveFurtherDetails = ({ id, city, introduction }) => {
+	return HTTPS.get('update-techfugee', {
+		params: {
+			id,
+			city,
+			introduction
+		}
+	}).then(response => response).catch(error => error.response);
+};

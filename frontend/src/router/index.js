@@ -13,6 +13,7 @@ import CompanyRegister from '../app/pages/companies/Register.vue';
 import Interests from '../app/pages/refugees/Interests.vue';
 import TechQuestions from '../app/pages/refugees/TechQuestions.vue';
 import Rejected from '../app/pages/refugees/Rejected.vue';
+import FurtherDetails from '../app/pages/refugees/FurtherDetails.vue';
 
 Vue.use(Router);
 
@@ -65,6 +66,10 @@ const routes = [
 	{
 		path: '/rejected',
 		component: Rejected,
+	},
+	{
+		path: '/refugee/further-details',
+		component: FurtherDetails,
 	},
 ];
 

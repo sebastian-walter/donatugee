@@ -1,0 +1,79 @@
+<template>
+    <div>
+        <v-flex xs12>
+            <h1>
+                Tell us something more about you
+            </h1>
+            <v-alert v-if="errorMessage !== ''" color="error" icon="warning" value="true">
+                {{ this.errorMessage }}
+            </v-alert>
+            <v-form v-model="valid">
+                <v-text-field
+                        label="In which city are you at the moment?"
+                        v-model="city"
+                        :rules="cityRules"
+                        required
+                ></v-text-field>
+                <v-text-field
+                        name="description"
+                        label="Tell us a bit about yourself"
+                        v-model="description"
+                        multi-line
+                ></v-text-field>
+                <v-btn class="sign-up-button"
+                       small
+                       color="primary"
+                       dark
+                       large
+                       @click="save"
+                >
+                    Save and continue
+                </v-btn>
+            </v-form>
+        </v-flex>
+    </div>
+</template>
+<script>
+    import { saveFurtherDetails } from '../../api/api';
+
+    export default {
+    	name: 'FurtherDetails',
+        data() {
+    		return {
+    			city: '',
+                description: '',
+                errorMessage: '',
+            }
+        },
+        methods: {
+    		save() {
+    			debugger;
+    			saveFurtherDetails({
+                    id: window.localStorage.getItem('id'),
+                    city: this.city,
+                    introduction: this.description
+    			}).then(response => {
+    				if (response.status === 200) {
+    					let idChallenge = window.localStorage.getItem('idChallenge');
+						let path = '/challenges';
+    					if (idChallenge !== null) {
+							path = '/challenge/' + idChallenge;
+							this.$router.push({
+								path: path,
+                                params: {
+									id: idChallenge
+                                }
+							});
+                            return;
+                        }
+						this.$router.push({
+							path: path,
+						});
+    					return;
+                    }
+                    this.errorMessage = 'Something went wrong, please try again.';
+                })
+            }
+        }
+    }
+</script>
