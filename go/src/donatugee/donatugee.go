@@ -85,7 +85,17 @@ func (d *Donatugee) Challenges() ([]Challenge, error) {
 }
 
 func (d *Donatugee) InsertTechfugee(name, email, skills string) (Techfugee, []error) {
-	techfugee := Techfugee{
+	techfugee := Techfugee{}
+	errs := d.db.Where(&Techfugee{}, "name = ? AND email = ?", name, email).GetErrors()
+	if len(errs) > 0 {
+		return techfugee, errs
+	}
+
+	if techfugee.Name == name {
+		return techfugee, nil
+	}
+
+	techfugee = Techfugee{
 		Name:   name,
 		Email:  email,
 		Skills: skills,
