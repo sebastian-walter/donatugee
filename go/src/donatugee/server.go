@@ -35,6 +35,7 @@ func (s *Server) start() error {
 	mux.HandleFunc("/api/v1/insert-techfugee", s.insertTechfugee)
 	mux.HandleFunc("/api/v1/techfugees", s.techfugees)
 	mux.HandleFunc("/api/v1/update-auth", s.updateAuth)
+	mux.HandleFunc("/api/v1/add-skills", s.addSkills)
 
 	mux.Handle("/public", http.FileServer(http.Dir("./frontend/public")))
 	mux.Handle("/dist", http.FileServer(http.Dir("./frontend/dist")))
@@ -94,6 +95,65 @@ func (s *Server) insertTechfugee(resp http.ResponseWriter, r *http.Request) {
 	techfugee, errs := s.donatugee.InsertTechfugee(name, email, skills)
 	if len(errs) != 0 {
 		http.Error(resp, fmt.Sprintf("insert: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(techfugee)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+	}
+
+	_, _ = resp.Write(js)
+}
+
+func (s *Server) techfugee(resp http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+
+	techfugee, errs := s.donatugee.Techfugee(id)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("get: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(techfugee)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+	}
+
+	_, _ = resp.Write(js)
+}
+
+func (s *Server) challenge(resp http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+
+	challenge, errs := s.donatugee.Challenge(id)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("get: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(challenge)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+	}
+
+	_, _ = resp.Write(js)
+}
+
+func (s *Server) addSkills(resp http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+	skills := r.FormValue("skills")
+
+	techfugee, errs := s.donatugee.Techfugee(id)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("getfugee: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	techfugee, errs = s.donatugee.UpdateTechfugeeSkills(techfugee, skills)
+
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("addskille: %v", errs), http.StatusInternalServerError)
 		return
 	}
 
