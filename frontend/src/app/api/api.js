@@ -4,6 +4,15 @@ export const HTTPS = axios.create({
   baseURL: `https://www.donatugee.de/api/v1/`,
 });
 
+export const createDonatorProfile = ({name, email}) => {
+	return HTTPS.get('insert-donator', {
+		params: {
+			name,
+			email,
+		}
+	}).then(response => response).catch(error => error.response);
+};
+
 export const createProfile = ({ name, email }) => {
 	return HTTPS.get('insert-techfugee', {
 		params: {

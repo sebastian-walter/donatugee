@@ -40,6 +40,7 @@ func (s *Server) start() error {
 	mux.HandleFunc("/api/v1/add-skills", s.addSkills)
 	mux.HandleFunc("/api/v1/insert-challenge", s.insertChallenge)
 	mux.HandleFunc("/api/v1/update-techfugee", s.updateTechfugee)
+	mux.HandleFunc("/api/v1/insert-application", s.insertApplication)
 
 	mux.Handle("/public", http.FileServer(http.Dir("./frontend/public")))
 	mux.Handle("/dist", http.FileServer(http.Dir("./frontend/dist")))
@@ -174,11 +175,11 @@ func (s *Server) InsertDonator(resp http.ResponseWriter, r *http.Request) {
 	_, _ = resp.Write(js)
 }
 
-func (s *Server) InsertApplicadior(resp http.ResponseWriter, r *http.Request) {
-	techfugee_id := r.FormValue("techfugee_id")
-	challenge_id := r.FormValue("challenge_id")
+func (s *Server) insertApplication(resp http.ResponseWriter, r *http.Request) {
+	techfugeeID := r.FormValue("techfugee_id")
+	challengeID := r.FormValue("challenge_id")
 
-	application, errs := s.donatugee.InsertApplication(techfugee_id, challenge_id)
+	application, errs := s.donatugee.InsertApplication(techfugeeID, challengeID)
 	if len(errs) != 0 {
 		http.Error(resp, fmt.Sprintf("insert: %v", errs), http.StatusInternalServerError)
 		return
