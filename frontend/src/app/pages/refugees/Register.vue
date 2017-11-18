@@ -67,8 +67,12 @@
                     		this.errorMessage = 'User cannot be created';
                         }
 
+                        window.localStorage.setItem('userId', response.data.ID);
+						window.localStorage.setItem('email', response.data.Email);
+						window.localStorage.setItem('name', response.data.Name);
+
                         return this.$router.push({
-                            path: '/authentication',
+                            path: '/interests/add/' + response.data.ID,
                         });
                     })
             }
