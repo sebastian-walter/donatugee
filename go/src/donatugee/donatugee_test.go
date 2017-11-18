@@ -7,7 +7,7 @@ import (
 
 const DBName = "test.sqlite"
 
-func TestInsertTechfugee(t *testing.T) {
+func TestWriteAndReadTechfugee(t *testing.T) {
 	d, err := NewDonatugee(DBName)
 	if err != nil {
 		t.Fatalf("new donatugee: %v", err)
@@ -32,5 +32,14 @@ func TestInsertTechfugee(t *testing.T) {
 
 	if techfugee.Name != "foo" {
 		t.Fatalf("%s != %s", "foo", techfugee.Name)
+	}
+
+	techfugees, errs := d.Techfugees()
+	if len(errs) != 0 {
+		t.Fatalf("query: %v", errs)
+	}
+
+	if len(techfugees) < 0 {
+		t.Fatalf("%d != %d", 0, len(techfugees))
 	}
 }
