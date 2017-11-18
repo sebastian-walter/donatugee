@@ -113,7 +113,7 @@ func (s *Server) InsertDonator(resp http.ResponseWriter, r *http.Request) {
 	profile := r.FormValue("profile")
 	image := r.FormValue("image")
 
-	donator, errs := s.donatugee.InsertTechfugee(name, email, profile, image)
+	donator, errs := s.donatugee.InsertDonator(name, email, profile, image)
 	if len(errs) != 0 {
 		http.Error(resp, fmt.Sprintf("insert: %v", errs), http.StatusInternalServerError)
 		return
