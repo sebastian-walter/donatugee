@@ -1,11 +1,11 @@
 import axios from 'axios';
 
 export const HTTP = axios.create({
-  baseURL: `http://donatugee.de/`
+  baseURL: `https://www.donatugee.de/api/v1/`
 });
 
 export const getChallenges = () => {
-  return HTTP.get('/challenges').then(response => {
+  return HTTP.get('challenges').then(response => {
     return response;
   }).catch(e => {
     return e;

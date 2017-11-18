@@ -1,7 +1,11 @@
-div {
-    width: 100%;
+div, h1, h2, h3, h4, h5, h6 {
+    display: block;
 }
 
 .btn {
     margin: 0;
+}
+
+ul {
+    list-style-position: inside;
 }
