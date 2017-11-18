@@ -148,6 +148,24 @@ func (s *Server) InsertDonator(resp http.ResponseWriter, r *http.Request) {
 	_, _ = resp.Write(js)
 }
 
+func (s *Server) InsertApplicadior(resp http.ResponseWriter, r *http.Request) {
+	techfugee_id := r.FormValue("techfugee_id")
+	challenge_id := r.FormValue("challenge_id")
+
+	application, errs := s.donatugee.InsertApplication(techfugee_id, challenge_id)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("insert: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(application)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+	}
+
+	_, _ = resp.Write(js)
+}
+
 func (s *Server) techfugee(resp http.ResponseWriter, r *http.Request) {
 	id := r.FormValue("id")
 

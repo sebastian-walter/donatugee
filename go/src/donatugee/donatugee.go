@@ -148,6 +148,23 @@ func (d *Donatugee) InsertTechfugee(name, email, skills string) (Techfugee, []er
 	return techfugee, d.db.Create(&techfugee).GetErrors()
 }
 
+func (d *Donatugee) InsertApplication(techfugee, challenge string) (Application, []error) {
+
+	newID1, _ := strconv.Atoi(techfugee)
+	newID2, _ := strconv.Atoi(challenge)
+
+	application := Application{
+		TechfugeeID: uint(newID1),
+		ChallengeID: uint(newID2),
+	}
+	errs := d.db.Where(&Application{}, "techfugee_id = ? AND challenge_id = ?", newID1, newID2).GetErrors()
+	if len(errs) > 0 {
+		return application, errs
+	}
+
+	return application, d.db.Create(&application).GetErrors()
+}
+
 func (d *Donatugee) InsertDonator(name, email, profile, image string) (Donator, []error) {
 	donator := Donator{}
 	errs := d.db.Where(&Donator{}, "email = ?", email).GetErrors()
