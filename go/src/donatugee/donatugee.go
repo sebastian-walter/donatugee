@@ -96,7 +96,9 @@ func (d *Donatugee) UpdateAuth(id string, passed string) (Techfugee, []error) {
 }
 
 func (d *Donatugee) Challenges() ([]Challenge, error) {
-	return []Challenge{}, nil
+	var challenges []Challenge
+	errs := d.db.Find(&challenges).GetErrors()
+	return challenges, errs
 }
 
 func (d *Donatugee) Techfugee(id string) (Techfugee, []error) {
