@@ -72,10 +72,9 @@
 		},
 		methods: {
 			saveSkills() {
-				debugger;
 				const skills = this.skills.slice().filter(skill => skill.value).map(skill => skill.name);
 				addSkills({
-					skills: this.skills.filter(skill => skill.value).map(skill => skill.name),
+					skills: skills,
 					id: this.$route.params.idUser,
 				})
 					.then(response => {
@@ -83,8 +82,10 @@
 							this.errorMessage = 'Skills could not be added';
 						}
 
+						window.localStorage.setItem('skills', response.data.Skills);
+
 						return this.$router.push({
-							path: '/tech-questions/1',
+							path: '/tech-questions/' + skills[0] + '?step=1',
 						});
 					});
 			},

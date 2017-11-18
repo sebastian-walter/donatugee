@@ -17,16 +17,20 @@ export const createProfile = ({ name, email }) => {
 export const addSkills = ({ skills, id }) => {
 	return HTTPS.get('add-skills', {
 		params: {
-			skills,
+			skills: JSON.stringify(skills),
 			id,
 		}
 	}).then(response => response).catch(error => error.response);
 };
 
 export const getChallenges = () => {
-  return HTTPS.get('challenges').then(response => {
-    return response;
-  }).catch(e => {
-    return e;
-  })
+  return HTTPS.get('challenges').then(response => response).catch(error => error.response);
+};
+
+export const getChallenge = (id) => {
+	return HTTPS.get('challenge', {
+		params: {
+			id
+		}
+	}).then(response => response).catch(error => error.response);
 };

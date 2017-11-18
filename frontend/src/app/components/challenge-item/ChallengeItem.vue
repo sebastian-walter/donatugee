@@ -24,7 +24,7 @@
                                 :size="avatarSize"
                                 class="grey lighten-4"
                         >
-                            <img src="/static/apple-touch-icon-180x180.png" alt="avatar">
+                            <img src="https://lorempixel.com/180/180/cats/" alt="avatar">
                         </v-avatar>
                     </v-flex>
                     <v-flex xs9 offset-xs1>
