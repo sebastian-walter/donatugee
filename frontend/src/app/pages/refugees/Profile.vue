@@ -16,6 +16,18 @@
         <v-layout>
             <v-flex xs12>
                 <p>{{ techfugee.Introduction }}</p>
+                <v-chip v-for="skill in JSON.parse(techfugee.Skills)" key="skill" color="indigo" text-color="white">
+                    <v-icon left>code</v-icon>
+                    {{ skill }}
+                </v-chip>
+                <v-divider class="mt-2 mb-4"></v-divider>
+            </v-flex>
+        </v-layout>
+
+        <v-layout>
+
+            <v-flex xs12 >
+
                 <v-btn color="primary">Edit profile</v-btn>
             </v-flex>
         </v-layout>
@@ -29,7 +41,7 @@
         data() {
             return {
                 id: this.$route.params.id,
-                techfugee: {},
+                techfugee: { type: Object, required: true},
             };
         },
 		mounted() {
