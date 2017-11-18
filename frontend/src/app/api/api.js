@@ -42,3 +42,11 @@ export const getTechfugee = (id) => {
 		}
 	}).then(response => response).catch(error => error.response);
 };
+
+export const getDonator = (id) => {
+	return HTTPS.get('donator', {
+		params: {
+			id,
+		}
+	}).then(response => response).catch(error => error.response);
+}
