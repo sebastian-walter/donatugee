@@ -24,7 +24,7 @@ export const addSkills = ({ skills, id }) => {
 };
 
 export const getChallenges = () => {
-  return HTTP.get('challenges').then(response => {
+  return HTTPS.get('challenges').then(response => {
     return response;
   }).catch(e => {
     return e;
