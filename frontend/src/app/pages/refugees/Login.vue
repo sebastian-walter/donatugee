@@ -82,6 +82,8 @@
 					window.localStorage.setItem('skills', response.data.Skills);
 					window.localStorage.setItem('wrongAnswers', 0);
 					window.localStorage.setItem('authenticated', authenticated);
+					window.localStorage.setItem('city', response.data.City);
+					window.localStorage.setItem('introduction', response.data.Introduction);
 
 					if (Object.keys(JSON.parse(window.localStorage.getItem('skills'))).length === 0) {
 						return this.$router.push({
@@ -97,7 +99,7 @@
 
 					if (!response.data.Introduction === '' || response.data.City === '') {
 						return this.$router.push({
-							path: 'refugee/further-actions',
+							path: '/refugee/further-details',
 						});
 					}
 
@@ -109,10 +111,7 @@
                     }
 
 					return this.$router.push({
-						path: '/challenge',
-                        params: {
-							id: idChallenge,
-                        }
+						path: '/challenge/' + idChallenge,
 					});
 				})
 			}

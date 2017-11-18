@@ -83,6 +83,7 @@
 						}
 
 						window.localStorage.setItem('skills', response.data.Skills);
+						const authenticated = JSON.parse(window.localStorage.getItem('authenticated'));
 
 						if (!authenticated) {
 							return this.$router.push({
@@ -105,10 +106,7 @@
 						}
 
 						return this.$router.push({
-							path: '/challenge',
-							params: {
-								id: idChallenge,
-							}
+							path: '/challenge/' + idChallenge,
 						});
 					});
 			},

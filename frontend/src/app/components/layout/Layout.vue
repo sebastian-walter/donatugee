@@ -17,13 +17,10 @@
                 </v-list-tile>
                 <v-list-tile @click="">
                     <v-list-tile-action>
-                        <v-icon>contact_mail</v-icon>
+                        <v-icon>power_settings_new</v-icon>
                     </v-list-tile-action>
                     <v-list-tile-content>
-                        <v-list-tile-title>Contact</v-list-tile-title>
-                    </v-list-tile-content>
-                    <v-list-tile-content>
-                        <v-list-tile-title >Logout</v-list-tile-title>
+                        <v-list-tile-title @click="logout">Logout</v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
             </v-list>
@@ -58,6 +55,20 @@
 		props: {
 			source: String,
 		},
+        methods: {
+			logout() {
+				window.localStorage.removeItem('idChallenge');
+				window.localStorage.removeItem('userId');
+				window.localStorage.removeItem('email');
+				window.localStorage.removeItem('name');
+				window.localStorage.removeItem('skills');
+				window.localStorage.removeItem('wrongAnswers');
+				window.localStorage.removeItem('authenticated');
+				this.$router.push({
+                    path: '/',
+                });
+            }
+        }
 	};
 </script>
 

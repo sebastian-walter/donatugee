@@ -51,6 +51,7 @@
 <script>
 	import {questions, maxNumberOfIncorrectAnswers} from '../../../library/questions';
 	import { techfugeeAuthenticated } from '../../api/api';
+	import { hasFurtherDetails } from '../../../library/utils';
 
 	export default {
 		name: 'TechQuestions',
@@ -125,14 +126,15 @@
                     passed: true
 				}).then(response => {
 					if (response.status === 200) {
-						if (window.localStorage.getItem('introduction') === '' ||
-							window.localStorage.getItem('city') === '') {
+						debugger;
+
+						if (!hasFurtherDetails()) {
 							return this.$router.push({
-								path: 'refugee/further-actions',
+								path: '/refugee/further-details',
 							});
 						}
 
-						const idChallenge = window.localStorage.getItem('idChallenge');
+						const idChallenge = parseInt(window.localStorage.getItem('idChallenge'));
 						if (idChallenge === null) {
 							this.$router.push({
 								path: '/challenges',
@@ -140,10 +142,7 @@
 						}
 
 						return this.$router.push({
-							path: '/challenge',
-							params: {
-								id: idChallenge,
-							}
+							path: '/challenge/' + idChallenge,
 						});
                     }
 

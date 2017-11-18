@@ -47,25 +47,21 @@
         methods: {
     		save() {
     			saveFurtherDetails({
-                    id: window.localStorage.getItem('id'),
+                    id: window.localStorage.getItem('userId'),
                     city: this.city,
                     introduction: this.description
     			}).then(response => {
     				if (response.status === 200) {
+    					debugger;
     					let idChallenge = window.localStorage.getItem('idChallenge');
-						let path = '/challenges';
     					if (idChallenge !== null) {
-							path = '/challenge/' + idChallenge;
 							this.$router.push({
-								path: path,
-                                params: {
-									id: idChallenge
-                                }
+								path: '/challenge/' + idChallenge,
 							});
                             return;
                         }
 						this.$router.push({
-							path: path,
+							path: 'challenges',
 						});
     					return;
                     }
