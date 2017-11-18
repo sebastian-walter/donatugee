@@ -1,1 +1,1 @@
-web: donatugee
+web: go/bin/donatugee

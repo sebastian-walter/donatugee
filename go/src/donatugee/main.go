@@ -1,6 +1,7 @@
 package main
 
 import _ "github.com/jinzhu/gorm/dialects/sqlite"
+import _ "github.com/jinzhu/gorm/dialects/postgres"
 
 func main() {
 	d, err := NewDonatugee()
@@ -16,6 +17,6 @@ func main() {
 	s := NewServer(d)
 	err = s.start()
 	if err != nil {
-		panic(s)
+		panic(err)
 	}
 }
