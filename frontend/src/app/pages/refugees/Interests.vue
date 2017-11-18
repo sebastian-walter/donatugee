@@ -1,34 +1,41 @@
 <template>
-    <v-card>
-        <v-card-title primary-title>
-            <div>
-                <h3 class="headline mb-0">Tell us what skills you have already</h3>
-            </div>
-        </v-card-title>
-        <v-list>
-            <v-list-tile v-for="skill in skills">
-                <v-list-tile-action>
-                    <v-checkbox
-                            v-model="skill.value"
-                    ></v-checkbox>
-                </v-list-tile-action>
-                <v-list-tile-content>
-                    <v-list-tile-title>{{ skill.name }}</v-list-tile-title>
-                </v-list-tile-content>
-            </v-list-tile>
-        </v-list>
-        <v-card-actions>
-            <v-btn flat color="orange">Save</v-btn>
-        </v-card-actions>
-    </v-card>
+    <div>
+        <v-alert v-if="errorMessage !== ''" color="error" icon="warning" value="true">
+            {{ this.errorMessage }}
+        </v-alert>
+        <v-card>
+            <v-card-title primary-title>
+                <div>
+                    <h3 class="headline mb-0">Tell us what skills you have already</h3>
+                </div>
+            </v-card-title>
+            <v-list>
+                <v-list-tile v-for="skill in skills">
+                    <v-list-tile-action>
+                        <v-checkbox
+                                v-model="skill.value"
+                        ></v-checkbox>
+                    </v-list-tile-action>
+                    <v-list-tile-content>
+                        <v-list-tile-title>{{ skill.name }}</v-list-tile-title>
+                    </v-list-tile-content>
+                </v-list-tile>
+            </v-list>
+            <v-card-actions>
+                <v-btn flat color="orange" @click="saveSkills">Save</v-btn>
+            </v-card-actions>
+        </v-card>
+    </div>
 </template>
+
 <script>
-	import {createProfile} from '../../api/api';
+	import {addSkills} from '../../api/api';
 
 	export default {
 		name: 'Interests',
 		data() {
 			return {
+				errorMessage: '',
 				skills: [
 					{
 						name: 'Javascript',
@@ -36,6 +43,18 @@
 					},
 					{
 						name: 'PHP',
+						value: false,
+					},
+					{
+						name: 'Go',
+						value: false,
+					},
+					{
+						name: 'Ruby',
+						value: false,
+					},
+					{
+						name: 'C',
 						value: false,
 					},
 					{
@@ -52,15 +71,20 @@
 			},
 		},
 		methods: {
-			signUp() {
-				createProfile({name: this.name, email: this.email})
+			saveSkills() {
+				debugger;
+				const skills = this.skills.slice().filter(skill => skill.value).map(skill => skill.name);
+				addSkills({
+					skills: this.skills.filter(skill => skill.value).map(skill => skill.name),
+					id: this.$route.params.idUser,
+				})
 					.then(response => {
 						if (response.status !== 200) {
-							this.errorMessage = 'User cannot be created';
+							this.errorMessage = 'Skills could not be added';
 						}
 
 						return this.$router.push({
-							path: '/authentication',
+							path: '/tech-questions/1',
 						});
 					});
 			},
