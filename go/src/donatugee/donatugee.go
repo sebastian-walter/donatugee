@@ -153,21 +153,16 @@ func (d *Donatugee) UpdateTechfugee(id, city, introduction string) (Techfugee, [
 
 func (d *Donatugee) InsertTechfugee(name, email, skills string) (Techfugee, []error) {
 	var techfugees []Techfugee
-	errs := d.db.Where(&Techfugee{}, "email = ?", email).Find(&techfugees).GetErrors()
-	if len(errs) > 0 {
-		return techfugee, errs
+	errs := d.db.Find(&techfugees, "email = ?", email).GetErrors()
+	if len(errs) != 0 {
+		return Techfugee{}, errs
 	}
 
 	if len(techfugees) > 0 {
 		return techfugees[0], nil
 	}
-	techfugee := techfugees[0]
 
-	if techfugee.Email == email {
-		return techfugee, nil
-	}
-
-	techfugee = Techfugee{
+	techfugee := Techfugee{
 		Name:   name,
 		Email:  email,
 		Skills: skills,
