@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/jinzhu/gorm"
+	"strconv"
 )
 
 type Application struct {
@@ -21,6 +22,7 @@ type Donator struct {
 	Challenges []Challenge `gorm:"ForeignKey:ID"`
 
 	Name    string
+	Email   string
 	Profile string
 	Image   string
 }
@@ -84,7 +86,7 @@ func (d *Donatugee) Techfugees() ([]Techfugee, []error) {
 
 func (d *Donatugee) UpdateAuth(id string, passed string) (Techfugee, []error) {
 	var techfugee Techfugee
-	errs := d.db.First(&techfugee, "id = ?", id).GetErrors()
+	errs := d.db.First(&techfugee, "id = ?", strconv.Atoi(id)).GetErrors()
 	if len(errs) > 0 {
 		return techfugee, errs
 	}
@@ -99,14 +101,20 @@ func (d *Donatugee) Challenges() ([]Challenge, error) {
 
 func (d *Donatugee) Techfugee(id string) (Techfugee, []error) {
 	var techfugee Techfugee
-	errs := d.db.First(&techfugee, "id = ?", id).GetErrors()
+	errs := d.db.First(&techfugee, "id = ?", strconv.Atoi(id)).GetErrors()
 	return techfugee, errs
 }
 
 func (d *Donatugee) Challenge(id string) (Challenge, []error) {
 	var challenge Challenge
-	errs := d.db.First(&challenge, "id = ?", id).GetErrors()
+	errs := d.db.First(&challenge, "id = ?", strconv.Atoi(id)).GetErrors()
 	return challenge, errs
+}
+
+func (d *Donatugee) Donator(id string) (Donator, []error) {
+	var donator Donator
+	errs := d.db.First(&donator, "id = ?", strconv.Atoi(id)).GetErrors()
+	return donator, errs
 }
 
 func (d *Donatugee) UpdateTechfugeeSkills(techfugee Techfugee, skills string) (Techfugee, []error) {
@@ -133,6 +141,27 @@ func (d *Donatugee) InsertTechfugee(name, email, skills string) (Techfugee, []er
 	}
 
 	return techfugee, d.db.Create(&techfugee).GetErrors()
+}
+
+func (d *Donatugee) InsertDonator(name, email, profile, image string) (Donator, []error) {
+	donator := Donator{}
+	errs := d.db.Where(&Donator{}, "email = ?", email).GetErrors()
+	if len(errs) > 0 {
+		return donator, errs
+	}
+
+	if donator.Email == email {
+		return donator, nil
+	}
+
+	donator = Donator{
+		Name:   name,
+		Email:  email,
+		Profile: profile,
+		Image: image,
+	}
+
+	return donator, d.db.Create(&donator).GetErrors()
 }
 
 func (d *Donatugee) IntializeDB() []error {
