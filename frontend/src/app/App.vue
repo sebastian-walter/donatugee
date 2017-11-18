@@ -1,11 +1,17 @@
 <template>
-    <div>
-        <router-view></router-view>
-    </div>
+    <layout>
+        <router-view slot="content"></router-view>
+    </layout>
 </template>
 
 <script>
+    import Layout from './components/layout/Layout.vue';
+
 	export default {
+		name: 'App',
+		components: {
+			Layout,
+        },
 		data () {
 			return {
 				clipped: false,
@@ -22,11 +28,3 @@
 		}
 	}
 </script>
-
-<style scoped lang="scss" type="text/scss">
-  .test {
-    .test {
-      color: pink;
-    }
-  }
-</style>
