@@ -6,9 +6,6 @@ import (
 	"net/http"
 	"os"
 	"time"
-
-	"github.com/gorilla/handlers"
-	"github.com/gorilla/mux"
 )
 
 type Server struct {
@@ -20,9 +17,6 @@ func NewServer(donatugee *Donatugee) *Server {
 		donatugee: donatugee,
 	}
 
-	http.HandleFunc("/challenges", s.challenges)
-	http.HandleFunc("/insert-techfugee", s.insertTechfugee)
-
 	return s
 }
 
@@ -32,32 +26,14 @@ func (s *Server) start() error {
 		addr = os.Getenv("PORT")
 	}
 
-	r := mux.NewRouter()
+	http.HandleFunc("/api/v1/challenges", s.challenges)
+	http.HandleFunc("/api/v1/insert-techfugee", s.insertTechfugee)
 
-	// Note: In a larger application, we'd likely extract our route-building logic into our handlers
-	// package, given the coupling between them.
+	http.Handle("/public", http.FileServer(http.Dir("./frontend/public")))
+	http.Handle("/dist", http.FileServer(http.Dir("./frontend/dist")))
+	http.Handle("/", http.FileServer(http.Dir("./frontend")))
 
-	// It's important that this is before your catch-all route ("/")
-	api := r.PathPrefix("/api/v1/").Subrouter()
-	api.HandleFunc("/challenges", s.challenges).Methods("GET")
-	// Optional: Use a custom 404 handler for our API paths.
-	// api.NotFoundHandler = JSONNotFound
-
-	// Serve static assets directly.
-	r.PathPrefix("/public").Handler(http.StripPrefix("/public/", http.FileServer(http.Dir("./frontend/public/"))))
-	r.PathPrefix("/dist").Handler(http.StripPrefix("/dist/", http.FileServer(http.Dir("./frontend/dist/"))))
-	// Catch-all: Serve our JavaScript application's entry-point (index.html).
-	r.PathPrefix("/").HandlerFunc(IndexHandler("./frontend/index.html"))
-
-	srv := &http.Server{
-		Handler: handlers.LoggingHandler(os.Stdout, r),
-		Addr:    "0.0.0.0:" + addr,
-		// Good practice: enforce timeouts for servers you create!
-		WriteTimeout: 15 * time.Second,
-		ReadTimeout:  15 * time.Second,
-	}
-
-	return srv.ListenAndServe()
+	return http.ListenAndServe(":"+addr, nil)
 }
 
 func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request) {

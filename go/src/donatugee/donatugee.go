@@ -58,7 +58,7 @@ type Donatugee struct {
 }
 
 func OpenDatabase(dbname string) (db *gorm.DB, err error) {
-	if os.Getenv("ENV") == "production" {
+	if os.Getenv("DB") == "postgres" {
 		db, err := gorm.Open("postgres",
 			fmt.Sprintf("host=%s user=%s dbname=%s sslmode=require password=%s",
 				os.Getenv("P_HOST"),
@@ -78,7 +78,7 @@ func NewDonatugee(dbname string) (*Donatugee, error) {
 	if err != nil {
 		return nil, err
 	}
-	db.AutoMigrate(&Donatugee{})
+
 	return &Donatugee{
 		db: db,
 	}, nil
@@ -101,7 +101,7 @@ func (d *Donatugee) InsertTechfugee(name, email, skills string) []error {
 }
 
 func (d *Donatugee) IntializeDB() []error {
-	errs := d.db.CreateTable(&Techfugee{}, &Donator{}, &Challenge{}, &Application{}).GetErrors()
+	errs := d.db.AutoMigrate(&Techfugee{}, &Donator{}, &Challenge{}, &Application{}).GetErrors()
 	if len(errs) != 0 {
 		return errs
 	}
