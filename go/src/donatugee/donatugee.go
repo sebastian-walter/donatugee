@@ -7,44 +7,47 @@ import (
 )
 
 type Application struct {
-	ApplicationID int
-	Created       time.Time
-	Modified      time.Time
+	gorm.Model
+	ApplicationID uint
+	DonatorID     uint
+	ChallengeID   uint
+
+	Created  time.Time
+	Modified time.Time
 }
 
 type Donator struct {
-	DonatorID  int
-	Challenges []Challenge
-	Name       string
-	Profile    string
-	Image      string
-	Created    time.Time
-	Modified   time.Time
+	gorm.Model
+	DonatorID  uint
+	Challenges []Challenge `gorm:"ForeignKey:DonatorID"`
 
-	ChallengeRefer uint
+	Name     string
+	Profile  string
+	Image    string
+	Created  time.Time
+	Modified time.Time
 }
 
 type Techfugee struct {
-	TechfugeeID  int
-	Applications []Application
+	gorm.Model
+	TechfugeeID  uint
+	Applications []Application `gorm:"ForeignKey:TechfugeeID"`
 	Name         string
 	Email        string
 	Created      time.Time
 	Modified     time.Time
-
-	ApplicationsRefer uint
 }
 
 type Challenge struct {
-	ChallengeID  int
-	Applications []Application
+	gorm.Model
+	ChallengeID  uint
+	DonatorID    uint
+	Applications []Application `gorm:"ForeignKey:ChallengeID"`
 	Name         string
 	Image        string
 	Description  string
 	Created      time.Time
 	Modified     time.Time
-
-	ApplicationRefer uint
 }
 
 type Donatugee struct {
@@ -61,12 +64,18 @@ func NewDonatugee() (*Donatugee, error) {
 	}, nil
 }
 
+func (d *Donatugee) GetChallenges() ([]Challenge, error) {
+	return []Challenge{}, nil
+}
+
 func (d *Donatugee) IntializeDB() []error {
-	errs := d.db.AutoMigrate(&Application{}).GetErrors()
+	// .AddForeignKey("applications_refer", "application(application_id)", "RESTRICT", "RESTRICT")
+	errs := d.db.AutoMigrate(&Techfugee{}).GetErrors()
 	if len(errs) != 0 {
 		return errs
 	}
-	errs = d.db.AutoMigrate(&Techfugee{}).GetErrors()
+
+	errs = d.db.AutoMigrate(&Donator{}).GetErrors()
 	if len(errs) != 0 {
 		return errs
 	}
@@ -75,6 +84,16 @@ func (d *Donatugee) IntializeDB() []error {
 	if len(errs) != 0 {
 		return errs
 	}
+
+	// errs = d.db.AutoMigrate(&Application{}).AddForeignKey("techfugee_id", "techfugees(techfugee_id)", "RESTRICT", "RESTRICT").GetErrors()
+	// if len(errs) != 0 {
+	// 	return errs
+	// }
+
+	// errs = d.db.AutoMigrate(&Challenge{}).GetErrors()
+	// if len(errs) != 0 {
+	// 	return errs
+	// }
 
 	// errs = d.db.Model(&Donator{}).Related(&Item{}).GetErrors()
 	// if len(errs) != 0 {
