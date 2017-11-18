@@ -19,12 +19,12 @@ func TestWriteAndReadTechfugee(t *testing.T) {
 		t.Fatalf("initialize: %v", errs)
 	}
 
-	errs = d.InsertTechfugee("foo", "bar", "foobar")
+	techfugee, errs := d.InsertTechfugee("foo", "bar", "foobar")
 	if len(errs) != 0 {
 		t.Fatalf("insert: %v", errs)
 	}
 
-	techfugee := Techfugee{}
+	techfugee = Techfugee{}
 	errs = d.db.First(&techfugee).GetErrors()
 	if len(errs) != 0 {
 		t.Fatalf("first: %v", errs)

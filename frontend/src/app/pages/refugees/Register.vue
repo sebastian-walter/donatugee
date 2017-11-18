@@ -44,7 +44,6 @@
 				name: '',
 				nameRules: [
 					(v) => !!v || 'Name is required',
-					(v) => v.length <= 10 || 'Name must be less than 10 characters'
 				],
 				email: '',
 				emailRules: [
@@ -70,6 +69,8 @@
                         window.localStorage.setItem('userId', response.data.ID);
 						window.localStorage.setItem('email', response.data.Email);
 						window.localStorage.setItem('name', response.data.Name);
+						window.localStorage.setItem('skills', response.data.Skills);
+						window.localStorage.setItem('wrongAnswers', 0);
 
                         return this.$router.push({
                             path: '/interests/add/' + response.data.ID,

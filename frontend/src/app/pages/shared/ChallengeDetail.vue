@@ -3,7 +3,7 @@
         <h1 class="mb-2">Challenge {{ challenge.Name }}</h1>
         <h3 class="mb-2">powered by Trivago</h3>
 
-        <p class="mb-4">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,</p>
+        <p class="mb-4">{{ challenge.Description }}</p>
 
         <v-card class="mb-4">
             <v-card-title>
@@ -25,20 +25,17 @@
 
         <v-card>
             <v-card-title>
-                <h3 class="headline mb-2">Trivago</h3>
-                <v-layout>
-                    <v-flex xs2>
-                        <v-avatar
-                                :tile="tile"
-                                class="grey lighten-4"
-                        >
-                            <img src="https://lorempixel.com/180/180/cats/" alt="avatar">
-                        </v-avatar>
-                    </v-flex>
-                    <v-flex xs9 offset-xs1>
-                        <p class="mb-0">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt</p>
-                    </v-flex>
-                </v-layout>
+                <div><h3 class="headline mb-2">{{ donator.Name }}</h3></div>
+                <v-flex xs2>
+                    <v-avatar
+                            :tile="tile"
+                            class="grey lighten-4"
+                    >
+                        <img src="https://lorempixel.com/180/180/cats/" alt="avatar">
+                    </v-avatar>
+                </v-flex>
+                <v-flex xs9 offset-xs1 v-html="randomText.text_out">
+                </v-flex>
             </v-card-title>
             <v-card-title primary-title class="pt-0">
                 <h3>Düsseldorf, Germany</h3>
@@ -48,19 +45,29 @@
     </div>
 </template>
 <script>
-    import { getChallenge } from '../../api/api';
+    import { getChallenge, getDonator, getRandomText } from '../../api/api';
 
     export default {
     	name: 'ChallengeDetail',
         data() {
     		return {
     		    idChallenge: this.$route.params.id,
-                challenge: {}
+                challenge: {},
+                donator: {},
+                randomText: ''
             }
         },
         mounted() {
             getChallenge(this.idChallenge).then(response => {
                 this.challenge = response.data;
+            }).then(() => {
+                getDonator(this.challenge.DonatorID).then(response => {
+                    this.donator = response.data;
+                });
+            });
+
+            getRandomText().then(response => {
+                this.randomText = response.data;
             });
         }
     }

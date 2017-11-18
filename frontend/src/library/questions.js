@@ -1,3 +1,4 @@
+export const maxNumberOfIncorrectAnswers = 5;
 export const questions = [
 	{
 		question: 'What is commonly used as a placeholder in programming?',
