@@ -9,6 +9,7 @@ import CompanyProfile from '../app/pages/companies/Profile.vue';
 import Authentication from '../app/pages/refugees/Authentication.vue';
 import CreateChallenge from '../app/pages/companies/CreateChallenge.vue';
 import RefugeeRegister from '../app/pages/refugees/Register.vue';
+import RefugeeLogin from '../app/pages/refugees/Login.vue';
 import CompanyRegister from '../app/pages/companies/Register.vue';
 import Interests from '../app/pages/refugees/Interests.vue';
 import TechQuestions from '../app/pages/refugees/TechQuestions.vue';
@@ -42,6 +43,10 @@ const routes = [
 	{
 		path: '/refugee/register',
 		component: RefugeeRegister,
+	},
+	{
+		path: '/refugee/login',
+		component: RefugeeLogin,
 	},
 	{
 		path: '/company/register',

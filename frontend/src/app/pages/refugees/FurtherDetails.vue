@@ -7,11 +7,10 @@
             <v-alert v-if="errorMessage !== ''" color="error" icon="warning" value="true">
                 {{ this.errorMessage }}
             </v-alert>
-            <v-form v-model="valid">
+            <v-form>
                 <v-text-field
                         label="In which city are you at the moment?"
                         v-model="city"
-                        :rules="cityRules"
                         required
                 ></v-text-field>
                 <v-text-field

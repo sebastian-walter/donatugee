@@ -126,7 +126,7 @@
 				}).then(response => {
 					if (response.status === 200) {
 						this.$router.push({
-							path: '/further-details',
+							path: '/refugee/further-details',
 						});
 						return;
                     }
