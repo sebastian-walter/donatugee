@@ -35,6 +35,7 @@
                         name="Password"
                         label="Password"
                         v-model="password"
+                        type="password"
                         required
                 ></v-text-field>
                 <v-btn class="full-width"
