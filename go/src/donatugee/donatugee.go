@@ -199,6 +199,28 @@ func (d *Donatugee) UpdateTechfugee(id, city, introduction string) (Techfugee, [
 	return techfugee, d.db.Save(&techfugee).GetErrors()
 }
 
+func (d *Donatugee) AcceptApplication(id string) (Application, []error) {
+	var applications []Application
+
+	newID, err := strconv.Atoi(id)
+	if err != nil {
+		return Application{}, []error{err}
+	}
+
+	errs := d.db.Find(&applications, "id = ?", newID).GetErrors()
+	if len(errs) > 0 {
+		return Application{}, errs
+	}
+
+	if len(applications) == 0 {
+		return Application{}, []error{fmt.Errorf("no such techfugee: %s", id)}
+	}
+
+	application := applications[0]
+	application.Accepted = true
+	return application, d.db.Save(&application).GetErrors()
+}
+
 func (d *Donatugee) InsertTechfugee(name, email, skills string) (Techfugee, []error) {
 	var techfugees []Techfugee
 	errs := d.db.Find(&techfugees, "email = ?", email).GetErrors()

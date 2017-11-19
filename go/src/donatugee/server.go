@@ -43,6 +43,7 @@ func (s *Server) start() error {
 	mux.HandleFunc("/api/v1/insert-challenge", s.insertChallenge)
 	mux.HandleFunc("/api/v1/update-techfugee", s.updateTechfugee)
 	mux.HandleFunc("/api/v1/insert-application", s.insertApplication)
+	mux.HandleFunc("/api/v1/accept-application", s.acceptApplication)
 	mux.HandleFunc("/api/v1/application-by-techfugee", s.applicationByTechfugee)
 	mux.HandleFunc("/api/v1/challenges-by-donator", s.challengesByDonator)
 
@@ -315,6 +316,24 @@ func (s *Server) challenge(resp http.ResponseWriter, r *http.Request) {
 	}
 
 	js, err := json.Marshal(challenge)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	_, _ = resp.Write(js)
+}
+
+func (s *Server) acceptApplication(resp http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+
+	application, errs := s.donatugee.AcceptApplication(id)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("get: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(application)
 	if err != nil {
 		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
 		return

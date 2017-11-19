@@ -31,7 +31,7 @@
                         required
                         multi-line
                 ></v-text-field>
-                <v-btn class="sign-up-button"
+                <v-btn class="full-width"
                        small
                        color="primary"
                        dark
@@ -39,6 +39,14 @@
                        @click="signUp"
                 >
                     Sign up
+                </v-btn>
+                <v-btn class="full-width"
+                       small
+                       dark
+                       large
+                       @click="signUp"
+                >
+                    Login
                 </v-btn>
             </v-form>
         </v-flex>
@@ -65,7 +73,7 @@
 				errorMessage: '',
                 company: '',
                 address: '',
-                websiter: '',
+                website: '',
 			}
 		},
 		methods: {
@@ -80,17 +88,26 @@
                     website: this.website,
                     address: this.website,
 				}).then(response => {
+					debugger;
 					if (response.status !== 200) {
-						this.errorMessage = 'User cannot be created';
+						this.errorMessage = 'There is already an account with this email address. Please try to login';
+						return;
 					}
 
 					window.localStorage.setItem('companyId', response.data.ID);
 
 					return this.$router.push({
-						path: '/interests/add/' + response.data.ID,
+						path: '/company/your-challenges',
 					});
 				});
             }
 		}
 	}
 </script>
+
+<style lang="scss" type="text/scss">
+    .full-width {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+</style>

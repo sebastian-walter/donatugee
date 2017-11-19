@@ -9,7 +9,8 @@ import * as actions from './actions';
 import mutations from './mutations';
 
 const state = {
-	company: null
+	company: null,
+	companyChallenges: null,
 };
 
 const store = {
