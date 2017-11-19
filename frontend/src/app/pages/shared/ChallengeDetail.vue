@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1 class="mb-2">Challenge {{ challenge.Name }}</h1>
-        <h3 class="mb-2">powered by Trivago</h3>
+        <h3 class="mb-2">powered by {{ donator.Name }}</h3>
 
         <p class="mb-4">{{ challenge.Description }}</p>
 
@@ -27,11 +27,13 @@
         <v-btn v-if="!userId" class="mb-4" @click="handleSignUp()" color="primary">Sign up</v-btn>
         <v-btn v-if="!userId" class="mb-4" @click="handleLogin()" color="primary">Login</v-btn>
         <v-btn v-if="userId && !applied" class="mb-4" @click="handleApply()" color="primary">Apply</v-btn>
-        <v-btn v-if="userId && applied" class="mb-4" disabled>Already applied</v-btn>
-
+        <v-btn v-if="userId && applied && !accepted" class="mb-4" disabled><icon name="hourglass-o" class="mr-2"></icon>Already applied</v-btn>
+        <v-btn v-if="userId && applied && accepted" class="mb-4 green white--text"><icon name="check" class="mr-2"></icon>Accepted</v-btn>
         <v-card>
             <v-card-title>
-                <div><h3 class="headline mb-2">{{ donator.Name }}</h3></div>
+                <h3 class="headline mb-2">{{ donator.Name }}</h3>
+            </v-card-title>
+            <v-card-title class="pt-0">
                 <v-flex xs2>
                     <v-avatar
                             class="grey lighten-4"
@@ -42,10 +44,10 @@
                 <v-flex xs9 offset-xs1 v-html="randomText.text_out">
                 </v-flex>
             </v-card-title>
-            <v-card-title primary-title class="pt-0">
-                <h3>Düsseldorf, Germany</h3>
-                <a href="trivago.de">Website</a>
-            </v-card-title>
+            <v-card-text primary-title class="pt-0">
+                <h3>{{ donator.Address }}</h3>
+                <a href="donator.Website">{{ donator.Website }}</a>
+            </v-card-text>
         </v-card>
     </div>
 </template>
@@ -73,7 +75,7 @@
                 });
             });
 
-            getRandomText('10-30').then(response => {
+            getRandomText('10-20').then(response => {
                 this.randomText = response.data;
             });
         },
@@ -108,6 +110,12 @@
 
                 return this.challenge.Applications.filter((application) => {
                     return application.TechfugeeID === parseInt(this.userId);
+                }).length > 0;
+            },
+
+            accepted() {
+                return this.challenge.Applications.filter((application) => {
+                    return (application.TechfugeeID === parseInt(this.userId)) && application.Accepted === true;
                 }).length > 0;
             }
         }
