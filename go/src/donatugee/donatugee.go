@@ -48,6 +48,7 @@ type Challenge struct {
 	LaptopType       string
 	Amount           uint
 	HardwareProvided string
+	Duration         string
 }
 
 type Donatugee struct {
@@ -301,7 +302,7 @@ func (d *Donatugee) IntializeDB() []error {
 	return nil
 }
 
-func (d *Donatugee) InsertChallenge(idDonator, name, description, laptopType, amount, hardwareProvided string) (Challenge, []error) {
+func (d *Donatugee) InsertChallenge(idDonator, name, description, laptopType, amount, hardwareProvided, duration string) (Challenge, []error) {
 	id, err := strconv.ParseUint(idDonator, 10, 64)
 	if err != nil {
 		return Challenge{}, []error{err}
@@ -319,6 +320,7 @@ func (d *Donatugee) InsertChallenge(idDonator, name, description, laptopType, am
 		LaptopType:       laptopType,
 		Amount:           uint(a),
 		HardwareProvided: hardwareProvided,
+		Duration:         duration,
 	}
 
 	errs := d.db.Create(&challenge).GetErrors()

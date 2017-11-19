@@ -87,8 +87,9 @@ func (s *Server) insertChallenge(resp http.ResponseWriter, r *http.Request) {
 	laptopType := r.FormValue("laptop_type")
 	hardwareProvided := r.FormValue("hardware_provided")
 	amount := r.FormValue("amount")
+	duration := r.FormValue("duration")
 
-	challenge, errs := s.donatugee.InsertChallenge(idDonator, name, description, laptopType, amount, hardwareProvided)
+	challenge, errs := s.donatugee.InsertChallenge(idDonator, name, description, laptopType, amount, hardwareProvided, duration)
 	if len(errs) > 0 {
 		http.Error(resp, fmt.Sprintf("insert: %v", errs), http.StatusInternalServerError)
 		return
