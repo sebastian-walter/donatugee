@@ -17,10 +17,10 @@
                 </v-list-tile>
                 <v-list-tile @click="">
                     <v-list-tile-action>
-                        <v-icon>contact_mail</v-icon>
+                        <v-icon>power_settings_new</v-icon>
                     </v-list-tile-action>
                     <v-list-tile-content>
-                        <v-list-tile-title>Contact</v-list-tile-title>
+                        <v-list-tile-title @click="logout">Logout</v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
             </v-list>
@@ -33,16 +33,32 @@
         <v-content>
             <v-container fluid fill-height>
                 <v-layout row>
-                    <v-flex xs12>
+                    <v-flex xs12 class="app-container">
                         <slot name="content"></slot>
                     </v-flex>
                 </v-layout>
             </v-container>
         </v-content>
-        <v-footer color="cyan" app>
-            <v-spacer></v-spacer>
-            <span class="white--text">&copy; 2017</span>
-        </v-footer>
+        <v-card>
+            <v-bottom-nav fixed :value="true" color="white">
+              <v-btn :class="getClass('/challenges')" :to="{path:'/challenges'}" flat color="primary">
+                <span>Home</span>
+                <v-icon>home</v-icon>
+              </v-btn>
+              <v-btn :class="getClass('/challenges')" :to="{path:'/your-challenges'}" flat color="primary">
+                <span>Your Challenges</span>
+                <v-icon>star</v-icon>
+              </v-btn>
+              <v-btn v-if="showRefugeeProfile" :class="getClass('/refugee/profile/')" :to="{path:'/refugee/profile/' + refugeeId}" flat color="primary">
+                <span>Profile</span>
+                <v-icon>person</v-icon>
+              </v-btn>
+              <v-btn v-if="companyId" :class="getClass('/company/profile/')" :to="{path:'/company/profile/' + refugeeId}" flat color="primary">
+                <span>Profile</span>
+                <v-icon>person</v-icon>
+              </v-btn>
+            </v-bottom-nav>
+        </v-card>
     </v-app>
 </template>
 
@@ -51,9 +67,46 @@
 		name: 'Layout',
 		data: () => ({
 			drawer: false,
+            refugeeId: window.localStorage.getItem('userId'),
+            companyId: window.localStorage.getItem('userIdCompany'),
 		}),
+        methods: {
+            getClass(path) {
+                let classes = [];
+                if (this.$route.path === path) {
+                    classes.push('active');
+                }
+                return classes;
+            },
+			logout() {
+				window.localStorage.removeItem('idChallenge');
+				window.localStorage.removeItem('userId');
+				window.localStorage.removeItem('email');
+				window.localStorage.removeItem('name');
+				window.localStorage.removeItem('skills');
+				window.localStorage.removeItem('wrongAnswers');
+				window.localStorage.removeItem('authenticated');
+				this.$router.push({
+                    path: '/',
+                });
+            }
+        },
 		props: {
 			source: String,
 		},
+        computed: {
+			showRefugeeProfile() {
+				if (window.localStorage.getItem('userId') !== null && window.localStorage.getItem('userId') !==
+                    undefined) {
+					return true;
+                }
+                return false;
+            }
+        }
 	};
 </script>
+<style lang="scss" type="text/scss">
+    .app-container {
+        margin-bottom: 2.5rem;
+    }
+</style>

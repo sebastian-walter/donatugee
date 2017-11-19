@@ -7,11 +7,10 @@
             <v-alert v-if="errorMessage !== ''" color="error" icon="warning" value="true">
                 {{ this.errorMessage }}
             </v-alert>
-            <v-form v-model="valid">
+            <v-form>
                 <v-text-field
                         label="In which city are you at the moment?"
                         v-model="city"
-                        :rules="cityRules"
                         required
                 ></v-text-field>
                 <v-text-field
@@ -47,27 +46,21 @@
         },
         methods: {
     		save() {
-    			debugger;
     			saveFurtherDetails({
-                    id: window.localStorage.getItem('id'),
+                    id: window.localStorage.getItem('userId'),
                     city: this.city,
                     introduction: this.description
     			}).then(response => {
     				if (response.status === 200) {
     					let idChallenge = window.localStorage.getItem('idChallenge');
-						let path = '/challenges';
     					if (idChallenge !== null) {
-							path = '/challenge/' + idChallenge;
 							this.$router.push({
-								path: path,
-                                params: {
-									id: idChallenge
-                                }
+								path: '/challenge/' + idChallenge,
 							});
                             return;
                         }
 						this.$router.push({
-							path: path,
+							path: 'challenges',
 						});
     					return;
                     }

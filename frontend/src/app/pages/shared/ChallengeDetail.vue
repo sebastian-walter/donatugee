@@ -7,7 +7,10 @@
 
         <v-card class="mb-4">
             <v-card-title>
-                <h3 class="title mb-2">What you will get</h3>
+                <h3 class="title mb-2 display-1">What you will get</h3>
+            </v-card-title>
+            <v-divider></v-divider>
+            <v-card-text>
                 <div>
                     <v-chip color="orange" text-color="white">
                         <v-icon left>laptop</v-icon>
@@ -18,17 +21,19 @@
                         Udemy
                     </v-chip>
                 </div>
-            </v-card-title>
+            </v-card-text>
         </v-card>
 
-        <v-btn class="mb-4" :to="{ path: '/refugee/register' }" color="primary">Sign up</v-btn>
+        <v-btn v-if="!userId" class="mb-4" @click="handleSignUp()" color="primary">Sign up</v-btn>
+        <v-btn v-if="!userId" class="mb-4" @click="handleLogin()" color="primary">Login</v-btn>
+        <v-btn v-if="userId && !applied" class="mb-4" @click="handleApply()" color="primary">Apply</v-btn>
+        <v-btn v-if="userId && applied" class="mb-4" disabled>Already applied</v-btn>
 
         <v-card>
             <v-card-title>
                 <div><h3 class="headline mb-2">{{ donator.Name }}</h3></div>
                 <v-flex xs2>
                     <v-avatar
-                            :tile="tile"
                             class="grey lighten-4"
                     >
                         <img src="https://lorempixel.com/180/180/cats/" alt="avatar">
@@ -45,16 +50,18 @@
     </div>
 </template>
 <script>
-    import { getChallenge, getDonator, getRandomText } from '../../api/api';
+    import { getChallenge, getDonator, getRandomText, setApplication } from '../../api/api';
 
     export default {
-    	name: 'ChallengeDetail',
+		name: 'ChallengeDetail',
         data() {
     		return {
     		    idChallenge: this.$route.params.id,
-                challenge: {},
+                challenge: { Applications: [] },
                 donator: {},
-                randomText: ''
+                randomText: '',
+                hasApplied: false,
+                userId: window.localStorage.getItem('userId')
             }
         },
         mounted() {
@@ -66,9 +73,43 @@
                 });
             });
 
-            getRandomText().then(response => {
+            getRandomText('10-30').then(response => {
                 this.randomText = response.data;
             });
+        },
+        methods: {
+            handleSignUp() {
+                window.localStorage.setItem('idChallenge', this.idChallenge);
+                this.$router.push({
+                    path: '/refugee/register'
+                });
+            },
+
+            handleLogin() {
+                window.localStorage.setItem('idChallenge', this.idChallenge);
+                this.$router.push({
+                    path: '/refugee/login'
+                });
+            },
+
+            handleApply() {
+                setApplication(this.challenge.ID, this.userId).then(
+                	response => {
+                	    this.hasApplied = true;
+                    }
+                );
+            }
+        },
+        computed: {
+            applied() {
+            	if (this.hasApplied) {
+            		return true;
+                }
+
+                return this.challenge.Applications.filter((application) => {
+                    return application.TechfugeeID === parseInt(this.userId);
+                }).length > 0;
+            }
         }
     }
 </script>
