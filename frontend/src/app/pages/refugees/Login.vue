@@ -74,7 +74,6 @@
 						this.errorMessage = 'User cannot be created';
 					}
 
-					debugger;
 					let authenticated;
 					if (response.data.Authenticated === '') {
                         authenticated = false
