@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 class="mb-2">Challenge {{ challenge.Name }}</h1>
+        <h1 class="headline mb-2">{{ challenge.Name }}</h1>
         <h3 class="mb-2">powered by {{ donator.Name }}</h3>
 
         <p class="mb-4">{{ challenge.Description }}</p>
@@ -14,11 +14,11 @@
                 <div>
                     <v-chip color="orange" text-color="white">
                         <v-icon left>laptop</v-icon>
-                        Laptop
+                        {{ challenge.LaptopType }}
                     </v-chip>
                     <v-chip color="indigo" text-color="white">
                         <v-icon left>code</v-icon>
-                        Udemy
+                        {{ challenge.Amount }} € Udemy Coupon
                     </v-chip>
                 </div>
             </v-card-text>
@@ -46,7 +46,7 @@
             </v-card-title>
             <v-card-text primary-title class="pt-0">
                 <h3>{{ donator.Address }}</h3>
-                <a href="donator.Website">{{ donator.Website }}</a>
+                <a :href="'http://' + donator.Website" target="_blank">{{ donator.Website }}</a>
             </v-card-text>
         </v-card>
     </div>
