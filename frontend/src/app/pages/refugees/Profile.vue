@@ -56,7 +56,7 @@
             }
 		},
 		mounted() {
-			getTechfugee(this.id).then(response => {
+			getTechfugee(window.localStorage.getItem('userId')).then(response => {
 				this.techfugee = response.data;
 			});
 		},

@@ -55,7 +55,7 @@
                     <v-icon>star</v-icon>
                 </v-btn>
                 <v-btn v-if="isLoggedIn" :class="getClass('/refugee/profile/')"
-                       :to="{path:'/refugee/profile/' + refugeeId}" flat color="primary">
+                       to="/refugee/profile" flat color="primary">
                     <span>Profile</span>
                     <v-icon>person</v-icon>
                 </v-btn>

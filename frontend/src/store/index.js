@@ -26,11 +26,20 @@ const isRefugee = () => {
 	return false;
 };
 
+const refugeeId = () => {
+	const refugeeId = window.localStorage.getItem('userId');
+	if (refugeeId !== null && typeof refugeeId !== 'undefined') {
+		return null;
+	}
+	return refugeeId;
+};
+
 const state = {
 	company: null,
 	companyChallenges: [],
 	isLoggedIn: isLoggedIn(),
 	isRefugee: isRefugee(),
+	refugeeId: refugeeId(),
 };
 
 const store = {

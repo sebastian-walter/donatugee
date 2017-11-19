@@ -45,7 +45,7 @@ const routes = [
 		component: ChallengeDetail,
 	},
 	{
-		path: '/refugee/profile/:id',
+		path: '/refugee/profile',
 		component: RefugeeProfile,
 	},
 	{
