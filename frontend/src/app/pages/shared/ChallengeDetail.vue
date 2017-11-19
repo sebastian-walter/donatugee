@@ -38,7 +38,7 @@
                     <v-avatar
                             class="grey lighten-4"
                     >
-                        <img :src="'https://lorempixel.com/180/180/cats/' + (donator.ID%10)" alt="avatar">
+                        <img :src="'https://lorempixel.com/180/180/people/' + (donator.ID%10)" alt="avatar">
                     </v-avatar>
                 </v-flex>
                 <v-flex xs9 offset-xs1 v-html="randomText.text_out">
