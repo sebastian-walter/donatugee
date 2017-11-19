@@ -23,6 +23,14 @@ export const createProfile = ({ name, email }) => {
 	}).then(response => response).catch(error => error.response);
 };
 
+export const loginDonator = ({ email }) => {
+	return HTTPS.get('login-donator', {
+		params: {
+			email,
+		}
+	}).then(response => response).catch(error => error.response);
+};
+
 export const addSkills = ({ skills, id }) => {
 	return HTTPS.get('add-skills', {
 		params: {

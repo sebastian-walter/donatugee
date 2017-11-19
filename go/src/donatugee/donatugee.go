@@ -180,7 +180,7 @@ func (d *Donatugee) Techfugee(id string) (Techfugee, []error) {
 
 func (d *Donatugee) LoginDonator(email string) (Donator, []error) {
 	var donator Donator
-	errs := d.db.Preload("Applications").First(&donator, "email = ?", email).GetErrors()
+	errs := d.db.First(&donator, "email = ?", email).GetErrors()
 	return donator, errs
 }
 
