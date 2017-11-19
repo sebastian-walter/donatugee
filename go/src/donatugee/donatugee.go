@@ -22,9 +22,9 @@ type Donator struct {
 	Challenges []Challenge `gorm:"ForeignKey:ID"`
 
 	Name    string
+	Website string
 	Email   string
-	Profile string
-	Image   string
+	Address string
 }
 
 type Techfugee struct {
@@ -222,22 +222,22 @@ func (d *Donatugee) InsertApplication(techfugee, challenge string) (Application,
 	return application, d.db.Create(&application).GetErrors()
 }
 
-func (d *Donatugee) InsertDonator(name, email, profile, image string) (Donator, []error) {
-	donator := Donator{}
-	errs := d.db.Where(&donator, "email = ?", email).GetErrors()
+func (d *Donatugee) InsertDonator(name, email, website, address string) (Donator, []error) {
+	var donators []Donator
+	errs := d.db.Find(&donators, "email = ?", email).GetErrors()
 	if len(errs) > 0 {
-		return donator, errs
+		return Donator{}, errs
 	}
 
-	if donator.Email == email {
-		return donator, nil
+	if len(donators) > 0 {
+		return Donator{}, []error{fmt.Errorf("exists already")}
 	}
 
-	donator = Donator{
+	donator := Donator{
 		Name:    name,
 		Email:   email,
-		Profile: profile,
-		Image:   image,
+		Website: website,
+		Address: address,
 	}
 
 	return donator, d.db.Create(&donator).GetErrors()

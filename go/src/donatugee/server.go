@@ -176,10 +176,10 @@ func (s *Server) insertTechfugee(resp http.ResponseWriter, r *http.Request) {
 func (s *Server) insertDonator(resp http.ResponseWriter, r *http.Request) {
 	name := r.FormValue("name")
 	email := r.FormValue("email")
-	profile := r.FormValue("profile")
-	image := r.FormValue("image")
+	website := r.FormValue("website")
+	address := r.FormValue("address")
 
-	donator, errs := s.donatugee.InsertDonator(name, email, profile, image)
+	donator, errs := s.donatugee.InsertDonator(name, email, website, address)
 	if len(errs) != 0 {
 		http.Error(resp, fmt.Sprintf("insert: %v", errs), http.StatusInternalServerError)
 		return
