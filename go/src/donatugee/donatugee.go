@@ -208,10 +208,18 @@ func (d *Donatugee) InsertTechfugee(name, email, skills string) (Techfugee, []er
 }
 
 func (d *Donatugee) InsertApplication(techfugee, challenge string) (Application, []error) {
-	newID1, _ := strconv.Atoi(techfugee)
-	newID2, _ := strconv.Atoi(challenge)
-
 	var applications []Application
+
+	newID1, err := strconv.Atoi(techfugee)
+	if err != nil {
+		return applications, []error{err}
+	}
+
+	newID2, err := strconv.Atoi(challenge)
+	if err != nil {
+		return applications, []error{err}
+	}
+
 	errs := d.db.Find(&applications, "techfugee_id = ? AND challenge_id = ?", newID1, newID2).GetErrors()
 	if len(errs) > 0 {
 		return Application{}, errs
