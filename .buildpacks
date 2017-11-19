@@ -1,1 +1,2 @@
+frontend=https://github.com/heroku/heroku-buildpack-nodejs.git
 go=https://github.com/heroku/heroku-buildpack-go

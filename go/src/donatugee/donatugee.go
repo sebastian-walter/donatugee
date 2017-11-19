@@ -22,9 +22,9 @@ type Donator struct {
 	Challenges []Challenge `gorm:"ForeignKey:ID"`
 
 	Name    string
+	Website string
 	Email   string
-	Profile string
-	Image   string
+	Address string
 }
 
 type Techfugee struct {
@@ -108,13 +108,13 @@ func (d *Donatugee) ChallengesByTechfugee(idTechfugee string) ([]Challenge, []er
 		return nil, errs
 	}
 
-	ids := []uint{}
+	var ids []uint
 	for _, e := range applications {
 		ids = append(ids, e.ChallengeID)
 	}
 
 	var challenges []Challenge
-	errs = d.db.Debug().Find(&challenges, "id IN (?)", ids).GetErrors()
+	errs = d.db.Find(&challenges, "id IN (?)", ids).GetErrors()
 	return challenges, errs
 
 }
@@ -127,9 +127,18 @@ func (d *Donatugee) Challenges() ([]Challenge, []error) {
 
 func (d *Donatugee) Techfugee(id string) (Techfugee, []error) {
 	var techfugee Techfugee
-	newID, _ := strconv.Atoi(id)
+	newID, err := strconv.Atoi(id)
+	if err != nil {
+		return techfugee, []error{err}
+	}
 	errs := d.db.Preload("Applications").First(&techfugee, "id = ?", newID).GetErrors()
 	return techfugee, errs
+}
+
+func (d *Donatugee) LoginDonator(email string) (Donator, []error) {
+	var donator Donator
+	errs := d.db.Preload("Applications").First(&donator, "email = ?", email).GetErrors()
+	return donator, errs
 }
 
 func (d *Donatugee) LoginTechfugee(email string) (Techfugee, []error) {
@@ -151,7 +160,11 @@ func (d *Donatugee) Challenge(id string) (Challenge, []error) {
 
 func (d *Donatugee) Donator(id string) (Donator, []error) {
 	var donator Donator
-	newID, _ := strconv.Atoi(id)
+	newID, err := strconv.Atoi(id)
+	if err != nil {
+		return donator, []error{err}
+	}
+
 	errs := d.db.First(&donator, "id = ?", newID).GetErrors()
 	return donator, errs
 }
@@ -201,10 +214,18 @@ func (d *Donatugee) InsertTechfugee(name, email, skills string) (Techfugee, []er
 }
 
 func (d *Donatugee) InsertApplication(techfugee, challenge string) (Application, []error) {
-	newID1, _ := strconv.Atoi(techfugee)
-	newID2, _ := strconv.Atoi(challenge)
-
 	var applications []Application
+
+	newID1, err := strconv.Atoi(techfugee)
+	if err != nil {
+		return Application{}, []error{err}
+	}
+
+	newID2, err := strconv.Atoi(challenge)
+	if err != nil {
+		return Application{}, []error{err}
+	}
+
 	errs := d.db.Find(&applications, "techfugee_id = ? AND challenge_id = ?", newID1, newID2).GetErrors()
 	if len(errs) > 0 {
 		return Application{}, errs
@@ -222,22 +243,22 @@ func (d *Donatugee) InsertApplication(techfugee, challenge string) (Application,
 	return application, d.db.Create(&application).GetErrors()
 }
 
-func (d *Donatugee) InsertDonator(name, email, profile, image string) (Donator, []error) {
-	donator := Donator{}
-	errs := d.db.Where(&donator, "email = ?", email).GetErrors()
+func (d *Donatugee) InsertDonator(name, email, website, address string) (Donator, []error) {
+	var donators []Donator
+	errs := d.db.Find(&donators, "email = ?", email).GetErrors()
 	if len(errs) > 0 {
-		return donator, errs
+		return Donator{}, errs
 	}
 
-	if donator.Email == email {
-		return donator, nil
+	if len(donators) > 0 {
+		return Donator{}, []error{fmt.Errorf("exists already")}
 	}
 
-	donator = Donator{
+	donator := Donator{
 		Name:    name,
 		Email:   email,
-		Profile: profile,
-		Image:   image,
+		Website: website,
+		Address: address,
 	}
 
 	return donator, d.db.Create(&donator).GetErrors()

@@ -35,6 +35,7 @@ func (s *Server) start() error {
 	mux.HandleFunc("/api/v1/techfugees", s.techfugees)
 	mux.HandleFunc("/api/v1/techfugee", s.techfugee)
 	mux.HandleFunc("/api/v1/login", s.loginTechfugee)
+	mux.HandleFunc("/api/v1/login-donator", s.loginDonator)
 	mux.HandleFunc("/api/v1/challenge", s.challenge)
 	mux.HandleFunc("/api/v1/donator", s.donator)
 	mux.HandleFunc("/api/v1/update-auth", s.updateAuth)
@@ -176,10 +177,10 @@ func (s *Server) insertTechfugee(resp http.ResponseWriter, r *http.Request) {
 func (s *Server) insertDonator(resp http.ResponseWriter, r *http.Request) {
 	name := r.FormValue("name")
 	email := r.FormValue("email")
-	profile := r.FormValue("profile")
-	image := r.FormValue("image")
+	website := r.FormValue("website")
+	address := r.FormValue("address")
 
-	donator, errs := s.donatugee.InsertDonator(name, email, profile, image)
+	donator, errs := s.donatugee.InsertDonator(name, email, website, address)
 	if len(errs) != 0 {
 		http.Error(resp, fmt.Sprintf("insert: %v", errs), http.StatusInternalServerError)
 		return
@@ -241,6 +242,24 @@ func (s *Server) loginTechfugee(resp http.ResponseWriter, r *http.Request) {
 	}
 
 	js, err := json.Marshal(techfugee)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	_, _ = resp.Write(js)
+}
+
+func (s *Server) loginDonator(resp http.ResponseWriter, r *http.Request) {
+	email := r.FormValue("email")
+
+	donator, errs := s.donatugee.LoginDonator(email)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("get: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(donator)
 	if err != nil {
 		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
 		return
