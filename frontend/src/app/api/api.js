@@ -129,3 +129,25 @@ export const retrieveChallengesForDonator = ({id}) => {
 		}
 	}).then(response => response).catch(error => error.response);
 };
+
+export const createChallengeForDonator = ({idDonator, name, description, duration, laptopType, amount, hardwareProvided}) => {
+	return HTTPS.get('insert-challenge', {
+		params: {
+			id_donator: idDonator,
+			name,
+			description,
+			duration,
+			laptop_type: laptopType,
+			amount,
+			hardware_provided: hardwareProvided,
+		}
+	}).then(response => response).catch(error => error.response);
+};
+
+export const doAcceptApplicant = ({id}) => {
+	return HTTPS.get('accept-application', {
+		params: {
+			id
+		}
+	}).then(response => response).catch(error => error.response);
+};

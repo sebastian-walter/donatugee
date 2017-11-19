@@ -24,7 +24,7 @@
             </v-flex>
         </v-layout>
 
-        <v-layout>
+        <v-layout v-if="isRefugee">
             <v-flex xs12>
                 <v-btn color="primary">Edit profile</v-btn>
                 <v-btn color="error" @click="logout">Log out</v-btn>
@@ -50,6 +50,9 @@
 				}
 				return JSON.parse(this.techfugee.Skills);
 			},
+			isRefugee() {
+				return window.localStorage.getItem('userId') !== null;
+            }
 		},
 		mounted() {
 			getTechfugee(this.id).then(response => {

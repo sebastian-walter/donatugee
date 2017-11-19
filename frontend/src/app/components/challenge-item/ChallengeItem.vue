@@ -24,7 +24,7 @@
                         <v-avatar
                                 class="grey lighten-4"
                         >
-                            <img :src="'https://lorempixel.com/' + (180 + challenge.ID) + '/' + (180 + challenge.ID) + '/cats/'" alt="avatar">
+                            <img :src="'https://lorempixel.com/' + (180 + challenge.ID) + '/' + (180 + challenge.ID) + '/people/'" alt="avatar">
                         </v-avatar>
                     </v-flex>
                     <v-flex xs9 offset-xs1>
@@ -62,12 +62,18 @@
             	if (this.$route.path === '/your-challenges') {
             		return true;
                 }
+                if (this.challenge.Applications === null) {
+            		return false;
+                }
                 return (this.challenge.Applications.filter((application) => {
                     return application.TechfugeeID === parseInt(this.userId);
                 }).length > 0);
             },
 
             accepted() {
+				if (this.challenge.Applications === null) {
+					return false;
+				}
                 return (this.challenge.Applications.filter((application) => {
                     return (application.TechfugeeID === parseInt(this.userId)) && application.Accepted === true;
                 }).length > 0);

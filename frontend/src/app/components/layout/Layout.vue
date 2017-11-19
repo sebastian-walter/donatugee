@@ -1,6 +1,7 @@
 <template>
     <v-app id="donatugee">
         <v-navigation-drawer
+                v-if="isLoggedIn"
                 fixed
                 v-model="drawer"
                 right
@@ -12,23 +13,26 @@
                         <v-icon>home</v-icon>
                     </v-list-tile-action>
                     <v-list-tile-content>
-                        <v-list-tile-title>All Challenges</v-list-tile-title>
+                        <v-list-tile-title @click="$router.push({ path: '/company/your-challenges' })">
+                            All Challenges
+                        </v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
                 <v-list-tile @click="">
                     <v-list-tile-action>
                         <v-icon>power_settings_new</v-icon>
                     </v-list-tile-action>
-                    <v-list-tile-content>
+                    <v-list-tile-content v-if="isLoggedIn">
                         <v-list-tile-title @click="logout">Logout</v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
             </v-list>
         </v-navigation-drawer>
-        <v-toolbar color="light-blue darken-4" dark fixed app>
+        <v-toolbar color="blue accent-4" dark fixed app>
+            <div class="logo"><router-link :to="{ path: '/' }"><img src="../../../assets/logo.svg"></router-link></div>
             <v-spacer></v-spacer>
             <v-toolbar-title>HackFugee</v-toolbar-title>
-            <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+            <v-toolbar-side-icon v-if="isLoggedIn" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
         </v-toolbar>
         <v-content>
             <v-container fluid fill-height>
@@ -40,7 +44,7 @@
             </v-container>
         </v-content>
         <v-card>
-            <v-bottom-nav v-if="companyId === null" fixed :value="true" color="white">
+            <v-bottom-nav v-if="isLoggedIn && companyId === null" fixed :value="true" color="white">
                 <v-btn :class="getClass('/challenges')" :to="{path:'/challenges'}" flat color="primary">
                     <span>Home</span>
                     <v-icon>home</v-icon>
@@ -76,6 +80,13 @@
 			source: String,
 		},
 		computed: {
+			isLoggedIn() {
+				if ((this.refugeeId !== null && typeof this.refugeeId !== 'undefined') ||
+                    (this.companyId !== null && this.companyId !== 'undefined')) {
+					return true;
+				}
+				return false;
+            },
 			refugeeId() {
 				return JSON.parse(localStorage.getItem('userId'));
 			},
@@ -113,7 +124,6 @@
 				this.getRefugeeData({ id: this.refugeeId });
 				return;
 			}
-			debugger;
 			if (this.companyId !== null) {
                 this.getDonatorData(this.companyId);
 			}
@@ -124,5 +134,16 @@
 <style lang="scss" type="text/scss">
     .app-container {
         margin-bottom: 2.5rem;
+    }
+
+    .logo {
+        height: 100%;
+        padding: 10px 0;
+
+        img {
+            display: block;
+            width: auto;
+            height: 100%;
+        }
     }
 </style>
