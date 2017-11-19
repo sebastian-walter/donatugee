@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 class="mb-4">Discover Challenges</h1>
+        <h1 class="display-1 mb-4">Discover Challenges</h1>
         <p class="mb-4" v-html="randomText.text_out"></p>
         <template v-for="challenge in challenges">
             <challenge-item :challenge="challenge"></challenge-item>

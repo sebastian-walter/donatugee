@@ -28,9 +28,9 @@
                 </v-list-tile>
             </v-list>
         </v-navigation-drawer>
-        <v-toolbar color="cyan" dark fixed app>
+        <v-toolbar color="light-blue darken-4" dark fixed app>
             <v-spacer></v-spacer>
-            <v-toolbar-title>Application</v-toolbar-title>
+            <v-toolbar-title>HackFugee</v-toolbar-title>
             <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
         </v-toolbar>
         <v-content>

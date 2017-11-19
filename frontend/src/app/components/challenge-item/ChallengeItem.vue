@@ -1,9 +1,9 @@
 <template>
     <div class="mb-4 challenge-item">
         <v-flex xs12>
-            <v-card :to="{ path: 'challenge/' + challenge.ID }" :class="applied">
+            <v-card :to="{ path: 'challenge/' + challenge.ID }">
                 <v-card-title>
-                    <div>
+                    <div class="card-title">
                         <h3 class="headline mb-2">{{ challenge.Name }}</h3>
                         <p>{{ challenge.Description }}</p>
                         <v-chip color="orange" text-color="white">
@@ -18,16 +18,18 @@
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-title primary-title class="pt-3">
+                    <icon v-if="!accepted && applied" class="applied-icon" name="hourglass-o"></icon>
+                    <icon v-if="accepted && applied" class="check-icon green--text" name="check"></icon>
                     <v-flex xs2>
                         <v-avatar
                                 class="grey lighten-4"
                         >
-                            <img src="https://lorempixel.com/180/180/cats/" alt="avatar">
+                            <img :src="'https://lorempixel.com/' + (180 + challenge.ID) + '/' + (180 + challenge.ID) + '/cats/'" alt="avatar">
                         </v-avatar>
                     </v-flex>
                     <v-flex xs9 offset-xs1>
                         <h3 class="mb-0">{{ donator.Name }}</h3>
-                        <div>Düsseldorf, Germany</div>
+                        <div>{{ donator.Address }}</div>
                     </v-flex>
                 </v-card-title>
             </v-card>
@@ -38,10 +40,11 @@
 <script>
     import { getDonator } from '../../api/api';
 
+
     export default {
         name: 'ChallengeItem',
         props: {
-            challenge: { type: Object, required: true }
+            challenge: { type: Object, required: true },
         },
         data() {
             return {
@@ -61,8 +64,14 @@
                 }
                 return (this.challenge.Applications.filter((application) => {
                     return application.TechfugeeID === parseInt(this.userId);
-                }).length > 0) ? 'applied' : '';
-            }
+                }).length > 0);
+            },
+
+            accepted() {
+                return (this.challenge.Applications.filter((application) => {
+                    return (application.TechfugeeID === parseInt(this.userId)) && application.Accepted === true;
+                }).length > 0);
+            },
         }
     }
 </script>
@@ -70,7 +79,15 @@
 <style scoped lang="scss" text="text/scss">
     @import '../../../assets/_variables.scss';
 
-    .card.applied {
-        background-color: $grey-lighter;
+    .card__title {
+        position: relative;
+    }
+
+    .applied-icon, .check-icon {
+        position: absolute;
+        top: 50%;
+        right: 16px;
+
+        transform: translate(0, -50%);
     }
 </style>

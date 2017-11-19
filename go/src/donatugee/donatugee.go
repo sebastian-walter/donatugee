@@ -40,12 +40,15 @@ type Techfugee struct {
 
 type Challenge struct {
 	gorm.Model
-	ChallengeID  uint
-	DonatorID    uint `sql:"type: integer REFERENCES donators(id)"`
-	Applications []Application
-	Name         string
-	Image        string
-	Description  string
+	ChallengeID      uint
+	DonatorID        uint `sql:"type: integer REFERENCES donators(id)"`
+	Applications     []Application
+	Name             string
+	Description      string
+	LaptopType       string
+	Amount           uint
+	HardwareProvided string
+	Duration         string
 }
 
 type Donatugee struct {
@@ -83,6 +86,36 @@ func (d *Donatugee) Techfugees() ([]Techfugee, []error) {
 	var techfugees []Techfugee
 	errs := d.db.Preload("Applications").Find(&techfugees).GetErrors()
 	return techfugees, errs
+}
+
+func (d *Donatugee) ChallengesByDonator(id string) ([]Challenge, []error) {
+	var challenges []Challenge
+	errs := d.db.Find(&challenges, "donator_id = ?", id).GetErrors()
+	if len(errs) != 0 {
+		return []Challenge{}, errs
+	}
+
+	ids := []uint{}
+	for _, e := range challenges {
+		ids = append(ids, e.ID)
+	}
+
+	var applications []Application
+	errs = d.db.Find(&applications, "challenge_id IN (?)", ids).GetErrors()
+	if len(errs) != 0 {
+		return []Challenge{}, errs
+	}
+
+	applicationMap := make(map[uint][]Application)
+	for _, e := range applications {
+		applicationMap[e.ChallengeID] = append(applicationMap[e.ChallengeID], e)
+	}
+
+	for i := range challenges {
+		challenges[i].Applications = applicationMap[challenges[i].ID]
+	}
+
+	return challenges, errs
 
 }
 
@@ -193,6 +226,28 @@ func (d *Donatugee) UpdateTechfugee(id, city, introduction string) (Techfugee, [
 	return techfugee, d.db.Save(&techfugee).GetErrors()
 }
 
+func (d *Donatugee) AcceptApplication(id string) (Application, []error) {
+	var applications []Application
+
+	newID, err := strconv.Atoi(id)
+	if err != nil {
+		return Application{}, []error{err}
+	}
+
+	errs := d.db.Find(&applications, "id = ?", newID).GetErrors()
+	if len(errs) > 0 {
+		return Application{}, errs
+	}
+
+	if len(applications) == 0 {
+		return Application{}, []error{fmt.Errorf("no such techfugee: %s", id)}
+	}
+
+	application := applications[0]
+	application.Accepted = true
+	return application, d.db.Save(&application).GetErrors()
+}
+
 func (d *Donatugee) InsertTechfugee(name, email, skills string) (Techfugee, []error) {
 	var techfugees []Techfugee
 	errs := d.db.Find(&techfugees, "email = ?", email).GetErrors()
@@ -273,16 +328,25 @@ func (d *Donatugee) IntializeDB() []error {
 	return nil
 }
 
-func (d *Donatugee) InsertChallenge(idDonator, name, description string) (Challenge, []error) {
+func (d *Donatugee) InsertChallenge(idDonator, name, description, laptopType, amount, hardwareProvided, duration string) (Challenge, []error) {
 	id, err := strconv.ParseUint(idDonator, 10, 64)
 	if err != nil {
 		return Challenge{}, []error{err}
 	}
 
+	a, err := strconv.ParseUint(amount, 10, 64)
+	if err != nil {
+		return Challenge{}, []error{err}
+	}
+
 	challenge := Challenge{
-		DonatorID:   uint(id),
-		Name:        name,
-		Description: description,
+		DonatorID:        uint(id),
+		Name:             name,
+		Description:      description,
+		LaptopType:       laptopType,
+		Amount:           uint(a),
+		HardwareProvided: hardwareProvided,
+		Duration:         duration,
 	}
 
 	errs := d.db.Create(&challenge).GetErrors()

@@ -31,4 +31,41 @@ export const questions = [
 		],
 		correctAnswerIndex: 3,
 	},
+	{
+		question: 'What is also a technology?',
+		answers: [
+			'Goethe',
+			'Brecht',
+			'Schiller',
+			'Kafka',
+		],
+		correctAnswerIndex: 3,
+	},
+	{
+		question: 'What is not a popular editor?',
+		answers: [
+			'nano',
+			'femto',
+			'pico',
+		],
+		correctAnswerIndex: 1,
+	},
+	{
+		question: 'Where do you search for help?',
+		answers: [
+			'fork bomb',
+			'dependency hell',
+			'stack overflow',
+		],
+		correctAnswerIndex: 2,
+	},
+	{
+		question: 'What is a popular pattern for web applications?',
+		answers: [
+			'MVC',
+			'CVM',
+			'MCV',
+		],
+		correctAnswerIndex: 0,
+	},
 ];
