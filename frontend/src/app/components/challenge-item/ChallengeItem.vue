@@ -8,11 +8,11 @@
                         <p>{{ challenge.Description }}</p>
                         <v-chip color="orange" text-color="white">
                             <v-icon left>laptop</v-icon>
-                            Laptop
+                            {{ challenge.LaptopType }}
                         </v-chip>
                         <v-chip color="indigo" text-color="white">
                             <v-icon left>code</v-icon>
-                            Udemy
+                            {{ challenge.Amount }} € Udemy Coupon
                         </v-chip>
                     </div>
                 </v-card-title>
