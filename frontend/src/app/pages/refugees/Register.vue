@@ -42,6 +42,7 @@
 </template>
 <script>
     import { createProfile } from '../../api/api';
+    import { mapActions } from 'vuex';
 
 	export default {
 		name: 'Register',
@@ -70,8 +71,11 @@
             }
         },
         methods: {
+            ...mapActions([
+            	'doCreateProfile',
+            ]),
 			signUp() {
-                createProfile({
+                this.doCreateProfile({
                     name: this.name,
                     email: this.email,
                     password: this.password
@@ -81,9 +85,6 @@
                         }
 
                         window.localStorage.setItem('userId', response.data.ID);
-						window.localStorage.setItem('email', response.data.Email);
-						window.localStorage.setItem('name', response.data.Name);
-						window.localStorage.setItem('skills', response.data.Skills);
 						window.localStorage.setItem('wrongAnswers', 0);
 
                         return this.$router.push({
