@@ -31,7 +31,6 @@
         <v-toolbar color="blue accent-4" dark fixed app>
             <div class="logo"><router-link :to="{ path: '/' }"><img src="../../../assets/logo.svg"></router-link></div>
             <v-spacer></v-spacer>
-            <v-toolbar-title>HackFugee</v-toolbar-title>
             <v-toolbar-side-icon v-if="isLoggedIn" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
         </v-toolbar>
         <v-content>
