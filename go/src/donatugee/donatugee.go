@@ -108,7 +108,7 @@ func (d *Donatugee) ChallengesByTechfugee(idTechfugee string) ([]Challenge, []er
 		return nil, errs
 	}
 
-	ids := []uint{}
+	var ids []uint
 	for _, e := range applications {
 		ids = append(ids, e.ChallengeID)
 	}
@@ -127,7 +127,10 @@ func (d *Donatugee) Challenges() ([]Challenge, []error) {
 
 func (d *Donatugee) Techfugee(id string) (Techfugee, []error) {
 	var techfugee Techfugee
-	newID, _ := strconv.Atoi(id)
+	newID, err := strconv.Atoi(id)
+	if err != nil {
+		return techfugee, []error{err}
+	}
 	errs := d.db.Preload("Applications").First(&techfugee, "id = ?", newID).GetErrors()
 	return techfugee, errs
 }
@@ -151,7 +154,11 @@ func (d *Donatugee) Challenge(id string) (Challenge, []error) {
 
 func (d *Donatugee) Donator(id string) (Donator, []error) {
 	var donator Donator
-	newID, _ := strconv.Atoi(id)
+	newID, err := strconv.Atoi(id)
+	if err != nil {
+		return donator, []error{err}
+	}
+
 	errs := d.db.First(&donator, "id = ?", newID).GetErrors()
 	return donator, errs
 }
@@ -201,10 +208,18 @@ func (d *Donatugee) InsertTechfugee(name, email, skills string) (Techfugee, []er
 }
 
 func (d *Donatugee) InsertApplication(techfugee, challenge string) (Application, []error) {
-	newID1, _ := strconv.Atoi(techfugee)
-	newID2, _ := strconv.Atoi(challenge)
-
 	var applications []Application
+
+	newID1, err := strconv.Atoi(techfugee)
+	if err != nil {
+		return applications, []error{err}
+	}
+
+	newID2, err := strconv.Atoi(challenge)
+	if err != nil {
+		return applications, []error{err}
+	}
+
 	errs := d.db.Find(&applications, "techfugee_id = ? AND challenge_id = ?", newID1, newID2).GetErrors()
 	if len(errs) > 0 {
 		return Application{}, errs
