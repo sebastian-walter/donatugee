@@ -5,6 +5,7 @@ import Home from '../app/pages/shared/Home.vue';
 import ChallengeList from '../app/pages/shared/ChallengeList.vue';
 import YourChallengeList from '../app/pages/refugees/YourChallengeList.vue';
 import ChallengeDetail from '../app/pages/shared/ChallengeDetail.vue';
+import CompanyChallengeDetail from '../app/pages/companies/ChallengeDetail.vue';
 import CompanyYourChallengeList from '../app/pages/companies/YourChallengeList.vue';
 import RefugeeProfile from '../app/pages/refugees/Profile.vue';
 import CompanyProfile from '../app/pages/companies/Profile.vue';
@@ -65,6 +66,10 @@ const routes = [
 	{
 		path: '/company/challenge/create',
 		component: CreateChallenge,
+	},
+	{
+		path: '/company/challenge/:id',
+		component: CompanyChallengeDetail,
 	},
 	{
 		path: '/authentication/:question',

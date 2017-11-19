@@ -88,7 +88,6 @@
                     website: this.website,
                     address: this.website,
 				}).then(response => {
-					debugger;
 					if (response.status !== 200) {
 						this.errorMessage = 'There is already an account with this email address. Please try to login';
 						return;

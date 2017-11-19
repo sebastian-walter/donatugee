@@ -1,6 +1,7 @@
 <template>
     <v-app id="donatugee">
         <v-navigation-drawer
+                v-if="companyId !== null"
                 fixed
                 v-model="drawer"
                 right
@@ -12,7 +13,9 @@
                         <v-icon>home</v-icon>
                     </v-list-tile-action>
                     <v-list-tile-content>
-                        <v-list-tile-title>All Challenges</v-list-tile-title>
+                        <v-list-tile-title @click="$router.push({ path: '/company/your-challenges' })">
+                            All Challenges
+                        </v-list-tile-title>
                     </v-list-tile-content>
                 </v-list-tile>
                 <v-list-tile @click="">
@@ -113,7 +116,6 @@
 				this.getRefugeeData({ id: this.refugeeId });
 				return;
 			}
-			debugger;
 			if (this.companyId !== null) {
                 this.getDonatorData(this.companyId);
 			}

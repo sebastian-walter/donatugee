@@ -43,7 +43,9 @@ func (s *Server) start() error {
 	mux.HandleFunc("/api/v1/insert-challenge", s.insertChallenge)
 	mux.HandleFunc("/api/v1/update-techfugee", s.updateTechfugee)
 	mux.HandleFunc("/api/v1/insert-application", s.insertApplication)
+	mux.HandleFunc("/api/v1/accept-application", s.acceptApplication)
 	mux.HandleFunc("/api/v1/application-by-techfugee", s.applicationByTechfugee)
+	mux.HandleFunc("/api/v1/challenges-by-donator", s.challengesByDonator)
 
 	mux.Handle("/public", http.FileServer(http.Dir("./frontend/public")))
 	mux.Handle("/dist", http.FileServer(http.Dir("./frontend/dist")))
@@ -63,7 +65,6 @@ func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request
 }
 
 func (s *Server) applicationByTechfugee(resp http.ResponseWriter, r *http.Request) {
-	// _, _ = resp.Write([]byte("foo"))
 	idTechfugee := r.FormValue("id")
 
 	applications, errs := s.donatugee.ChallengesByTechfugee(idTechfugee)
@@ -83,8 +84,12 @@ func (s *Server) insertChallenge(resp http.ResponseWriter, r *http.Request) {
 	idDonator := r.FormValue("id_donator")
 	name := r.FormValue("name")
 	description := r.FormValue("description")
+	laptopType := r.FormValue("laptop_type")
+	hardwareProvided := r.FormValue("hardware_provided")
+	amount := r.FormValue("amount")
+	duration := r.FormValue("duration")
 
-	challenge, errs := s.donatugee.InsertChallenge(idDonator, name, description)
+	challenge, errs := s.donatugee.InsertChallenge(idDonator, name, description, laptopType, amount, hardwareProvided, duration)
 	if len(errs) > 0 {
 		http.Error(resp, fmt.Sprintf("insert: %v", errs), http.StatusInternalServerError)
 		return
@@ -133,6 +138,22 @@ func (s *Server) updateTechfugee(resp http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
 		return
+	}
+
+	_, _ = resp.Write(js)
+}
+
+func (s *Server) challengesByDonator(resp http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+	challenges, errs := s.donatugee.ChallengesByDonator(id)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("query: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(challenges)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
 	}
 
 	_, _ = resp.Write(js)
@@ -296,6 +317,24 @@ func (s *Server) challenge(resp http.ResponseWriter, r *http.Request) {
 	}
 
 	js, err := json.Marshal(challenge)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	_, _ = resp.Write(js)
+}
+
+func (s *Server) acceptApplication(resp http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+
+	application, errs := s.donatugee.AcceptApplication(id)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("get: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(application)
 	if err != nil {
 		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
 		return

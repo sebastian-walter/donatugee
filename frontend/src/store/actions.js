@@ -2,7 +2,9 @@ import {
 	createCompanyProfile,
 	getDonator,
 	getRefugee,
-	retrieveChallengesForDonator
+	retrieveChallengesForDonator,
+	createChallengeForDonator,
+	doAcceptApplicant
 } from '../app/api/api';
 
 export const createCompany = ({state, commit}, data) => {
@@ -41,6 +43,25 @@ export const getChallengesForDonator = ({state, commit}, data) => {
 			return response;
 		}
 		commit('DONATOR_CHALLENGES_RETRIEVED', response.data);
+		return response;
+	})
+};
+
+export const createChallenge = ({state, commit}, data) => {
+	return createChallengeForDonator(data).then((response) => {
+		if (response.status !== 200) {
+			return response;
+		}
+		commit('DONATOR_CHALLENGES_RETRIEVED', response.data);
+		return response;
+	})
+};
+
+export const acceptApplicant = ({state, commit}, data) => {
+	return doAcceptApplicant(data).then((response) => {
+		if (response.status !== 200) {
+			return response;
+		}
 		return response;
 	})
 };
