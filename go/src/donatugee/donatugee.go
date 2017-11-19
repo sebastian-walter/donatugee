@@ -151,7 +151,11 @@ func (d *Donatugee) Challenge(id string) (Challenge, []error) {
 
 func (d *Donatugee) Donator(id string) (Donator, []error) {
 	var donator Donator
-	newID, _ := strconv.Atoi(id)
+	newID, err := strconv.Atoi(id)
+	if err != nil {
+		return donator, []error{err}
+	}
+
 	errs := d.db.First(&donator, "id = ?", newID).GetErrors()
 	return donator, errs
 }
