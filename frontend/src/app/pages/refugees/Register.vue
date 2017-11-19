@@ -89,7 +89,7 @@
                         return this.$router.push({
                             path: '/interests/add/' + response.data.ID,
                         });
-                    })
+                    });
             }
         }
 	};
