@@ -62,7 +62,6 @@
                     </v-form>
                 </v-card-text>
             </v-card>
-        </v-flex>
     </div>
 </template>
 <script>
@@ -94,7 +93,12 @@
 			...mapActions([
 				'createCompany',
 			]),
-			signUp() {
+            login() {
+                this.$router.push({
+                    path: '/companies/login',
+                });
+            },
+            signUp() {
 				this.createCompany({
 					name: this.companyName,
 					email: this.email,

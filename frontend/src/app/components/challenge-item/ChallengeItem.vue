@@ -18,8 +18,6 @@
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-title primary-title class="pt-3">
-                    <icon v-if="!accepted && applied" class="applied-icon" name="hourglass-o"></icon>
-                    <icon v-if="accepted && applied" class="check-icon green--text" name="check"></icon>
                     <v-flex xs2>
                         <v-avatar
                                 class="grey lighten-4"
@@ -31,6 +29,11 @@
                         <h3 class="mb-0">{{ donator.Name }}</h3>
                         <div>{{ donator.Address }}</div>
                     </v-flex>
+                </v-card-title>
+                <v-divider v-if="accepted || applied"></v-divider>
+                <v-card-title v-if="accepted || applied" class="card-status">
+                    <icon v-if="!accepted && applied" class="applied-icon" scale="2" name="hourglass-o"></icon>
+                    <icon v-if="accepted && applied" class="check-icon green--text" scale="2" name="check"></icon>
                 </v-card-title>
             </v-card>
         </v-flex>
@@ -85,15 +88,11 @@
 <style scoped lang="scss" text="text/scss">
     @import '../../../assets/_variables.scss';
 
-    .card__title {
-        position: relative;
+    .applied-icon, .check-icon {
+        display: inline-block;
     }
 
-    .applied-icon, .check-icon {
-        position: absolute;
-        top: 50%;
-        right: 16px;
-
-        transform: translate(0, -50%);
+    .card-status {
+        justify-content: center;
     }
 </style>
