@@ -148,6 +148,16 @@ func (d *Donatugee) ChallengesByTechfugee(idTechfugee string) ([]Challenge, []er
 
 	var challenges []Challenge
 	errs = d.db.Find(&challenges, "id IN (?)", ids).GetErrors()
+
+	applicationMap := make(map[uint][]Application)
+	for _, e := range applications {
+		applicationMap[e.ChallengeID] = append(applicationMap[e.ChallengeID], e)
+	}
+
+	for i := range challenges {
+		challenges[i].Applications = applicationMap[challenges[i].ID]
+	}
+
 	return challenges, errs
 
 }
@@ -170,7 +180,7 @@ func (d *Donatugee) Techfugee(id string) (Techfugee, []error) {
 
 func (d *Donatugee) LoginDonator(email string) (Donator, []error) {
 	var donator Donator
-	errs := d.db.Preload("Applications").First(&donator, "email = ?", email).GetErrors()
+	errs := d.db.First(&donator, "email = ?", email).GetErrors()
 	return donator, errs
 }
 
