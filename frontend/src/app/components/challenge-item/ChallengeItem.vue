@@ -4,8 +4,6 @@
             <v-card :to="{ path: 'challenge/' + challenge.ID }">
                 <v-card-title>
                     <div class="card-title">
-                        <icon v-if="!accepted && applied" class="applied-icon" name="hourglass-o"></icon>
-                        <icon v-if="accepted && applied" class="check-icon green--text" name="check"></icon>
                         <h3 class="headline mb-2">{{ challenge.Name }}</h3>
                         <p>{{ challenge.Description }}</p>
                         <v-chip color="orange" text-color="white">
@@ -20,11 +18,13 @@
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-title primary-title class="pt-3">
+                    <icon v-if="!accepted && applied" class="applied-icon" name="hourglass-o"></icon>
+                    <icon v-if="accepted && applied" class="check-icon green--text" name="check"></icon>
                     <v-flex xs2>
                         <v-avatar
                                 class="grey lighten-4"
                         >
-                            <img src="https://lorempixel.com/180/180/cats/" alt="avatar">
+                            <img :src="'https://lorempixel.com/' + (180 + challenge.ID) + '/' + (180 + challenge.ID) + '/cats/'" alt="avatar">
                         </v-avatar>
                     </v-flex>
                     <v-flex xs9 offset-xs1>
@@ -44,7 +44,7 @@
     export default {
         name: 'ChallengeItem',
         props: {
-            challenge: { type: Object, required: true }
+            challenge: { type: Object, required: true },
         },
         data() {
             return {
@@ -79,13 +79,15 @@
 <style scoped lang="scss" text="text/scss">
     @import '../../../assets/_variables.scss';
 
-    .card {
+    .card__title {
         position: relative;
     }
 
     .applied-icon, .check-icon {
         position: absolute;
-        top: 16px;
+        top: 50%;
         right: 16px;
+
+        transform: translate(0, -50%);
     }
 </style>
