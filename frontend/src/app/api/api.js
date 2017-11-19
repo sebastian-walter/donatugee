@@ -113,3 +113,19 @@ export const createCompanyProfile = ({ name, email, password, website, address }
 		}
 	}).then(response => response).catch(error => error.response);
 };
+
+export const getRefugee = ({id}) => {
+	return HTTPS.get('techfugee', {
+		params: {
+			id,
+		}
+	}).then(response => response).catch(error => error.response);
+};
+
+export const retrieveChallengesForDonator = ({id}) => {
+	return HTTPS.get('challenges-by-donator', {
+		params: {
+			id,
+		}
+	}).then(response => response).catch(error => error.response);
+};
