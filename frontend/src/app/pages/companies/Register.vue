@@ -55,13 +55,14 @@
                                small
                                dark
                                large
-                               @click="signUp"
+                               @click="login"
                         >
                             Login
                         </v-btn>
                     </v-form>
                 </v-card-text>
             </v-card>
+        </v-flex>
     </div>
 </template>
 <script>

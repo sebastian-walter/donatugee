@@ -24,5 +24,9 @@ export default {
 	},
 	COMPANY_LOGGED_OUT(state, payload) {
 		state.isLoggedIn = false;
+	},
+	COMPANY_LOGGED_IN(state, payload) {
+		state.isLoggedIn =  true;
+		state.isRefugee = false;
 	}
 };

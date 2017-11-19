@@ -36,6 +36,7 @@
 </template>
 <script>
 	import { loginDonator } from '../../api/api';
+	import { mapActions } from 'vuex';
 
 	export default {
 		name: 'Login',
@@ -60,8 +61,11 @@
 			}
 		},
 		methods: {
+            ...mapActions([
+            	'doLoginDonator',
+            ]),
 			login() {
-				loginDonator({
+				this.doLoginDonator({
 					email: this.email,
 				}).then(response => {
 					if (response.status !== 200) {

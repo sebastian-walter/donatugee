@@ -82,5 +82,17 @@ export const logoutRefugee = ({state, commit}, data) => {
 };
 
 export const logoutCompany = ({state, commit}, data) => {
-	commit('COMPANY_LOGGED_OUT');
+	commit('COMPANY_LOGGED_IN');
 };
+
+export const doLoginDonator = ({state, commit}, data) => {
+	this.loginDonator({
+		email: this.email,
+	}).then(response => {
+		if (response.status !== 200) {
+			return response;
+		}
+		commit('COMPANY_LOGGED_OUT');
+	});
+};
+
