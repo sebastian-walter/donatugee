@@ -102,3 +102,14 @@ export const setApplication = (challengeId, techfugeeId) => {
 	}).then(response => response).catch(error => error.response);
 };
 
+export const createCompanyProfile = ({ name, email, password, website, address }) => {
+	return HTTPS.get('insert-donator', {
+		params: {
+			name,
+			email,
+			password,
+			website,
+			address,
+		}
+	}).then(response => response).catch(error => error.response);
+};
