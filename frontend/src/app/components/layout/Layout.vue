@@ -29,7 +29,9 @@
             </v-list>
         </v-navigation-drawer>
         <v-toolbar color="blue accent-4" dark fixed app>
-            <div class="logo"><router-link :to="{ path: '/' }"><img src="../../../assets/logo.svg"></router-link></div>
+            <div class="logo">
+                <router-link :to="{ path: '/' }"><img src="../../../assets/logo.svg"></router-link>
+            </div>
             <v-spacer></v-spacer>
             <v-toolbar-side-icon v-if="isLoggedIn" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
         </v-toolbar>
@@ -68,24 +70,34 @@
 </template>
 
 <script>
-    import { mapActions, mapState } from 'vuex';
+	import {mapActions, mapState} from 'vuex';
 
 	export default {
 		name: 'Layout',
 		data: () => ({
 			drawer: false,
+			loggedOut: false,
 		}),
 		props: {
 			source: String,
 		},
 		computed: {
+			...mapState({
+				isLoggedInManually: state => state.isLoggedIn,
+			}),
 			isLoggedIn() {
+				if (this.loggedOut) {
+					return false;
+                }
+				if (!this.isLoggedInManually) {
+					return true;
+				}
 				if ((this.refugeeId !== null && typeof this.refugeeId !== 'undefined') ||
-                    (this.companyId !== null && this.companyId !== 'undefined')) {
+					(this.companyId !== null && this.companyId !== 'undefined')) {
 					return true;
 				}
 				return false;
-            },
+			},
 			refugeeId() {
 				return JSON.parse(localStorage.getItem('userId'));
 			},
@@ -97,11 +109,11 @@
 				return false;
 			},
 		},
-        methods: {
-            ...mapActions([
-            	'getRefugeeData',
+		methods: {
+			...mapActions([
+				'getRefugeeData',
 				'getDonatorData',
-            ]),
+			]),
 			getClass(path) {
 				let classes = [];
 				if (this.$route.path === path) {
@@ -113,18 +125,19 @@
 				window.localStorage.removeItem('companyId');
 				window.localStorage.removeItem('userId');
 				window.localStorage.removeItem('wrongAnswers');
+				this.loggedOut = false;
 				this.$router.push({
 					path: '/',
 				});
 			},
-        },
+		},
 		mounted() {
 			if (this.refugeeId !== null) {
-				this.getRefugeeData({ id: this.refugeeId });
+				this.getRefugeeData({id: this.refugeeId});
 				return;
 			}
 			if (this.companyId !== null) {
-                this.getDonatorData(this.companyId);
+				this.getDonatorData(this.companyId);
 			}
 		},
 	};

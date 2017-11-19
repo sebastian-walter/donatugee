@@ -82,13 +82,7 @@
                     }
 
 					window.localStorage.setItem('userId', response.data.ID);
-					window.localStorage.setItem('email', response.data.Email);
-					window.localStorage.setItem('name', response.data.Name);
-					window.localStorage.setItem('skills', response.data.Skills);
 					window.localStorage.setItem('wrongAnswers', 0);
-					window.localStorage.setItem('authenticated', authenticated);
-					window.localStorage.setItem('city', response.data.City);
-					window.localStorage.setItem('introduction', response.data.Introduction);
 
 					if (Object.keys(JSON.parse(window.localStorage.getItem('skills'))).length === 0) {
 						return this.$router.push({
