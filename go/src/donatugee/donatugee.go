@@ -40,12 +40,14 @@ type Techfugee struct {
 
 type Challenge struct {
 	gorm.Model
-	ChallengeID  uint
-	DonatorID    uint `sql:"type: integer REFERENCES donators(id)"`
-	Applications []Application
-	Name         string
-	Image        string
-	Description  string
+	ChallengeID      uint
+	DonatorID        uint `sql:"type: integer REFERENCES donators(id)"`
+	Applications     []Application
+	Name             string
+	Description      string
+	LaptopType       string
+	Amount           uint
+	HardwareProvided string
 }
 
 type Donatugee struct {
@@ -277,16 +279,24 @@ func (d *Donatugee) IntializeDB() []error {
 	return nil
 }
 
-func (d *Donatugee) InsertChallenge(idDonator, name, description string) (Challenge, []error) {
+func (d *Donatugee) InsertChallenge(idDonator, name, description, laptopType, amount, hardwareProvided string) (Challenge, []error) {
 	id, err := strconv.ParseUint(idDonator, 10, 64)
 	if err != nil {
 		return Challenge{}, []error{err}
 	}
 
+	a, err := strconv.ParseUint(amount, 10, 64)
+	if err != nil {
+		return Challenge{}, []error{err}
+	}
+
 	challenge := Challenge{
-		DonatorID:   uint(id),
-		Name:        name,
-		Description: description,
+		DonatorID:        uint(id),
+		Name:             name,
+		Description:      description,
+		LaptopType:       laptopType,
+		Amount:           uint(a),
+		HardwareProvided: hardwareProvided,
 	}
 
 	errs := d.db.Create(&challenge).GetErrors()
