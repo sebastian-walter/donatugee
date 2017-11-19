@@ -60,7 +60,7 @@
                             return;
                         }
 						this.$router.push({
-							path: 'challenges',
+							path: '/challenges',
 						});
     					return;
                     }

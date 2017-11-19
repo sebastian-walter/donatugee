@@ -18,7 +18,7 @@ export const createProfile = ({ name, email }) => {
 		params: {
 			name,
 			email,
-			skills: {},
+			skills: JSON.stringify([]),
 		}
 	}).then(response => response).catch(error => error.response);
 };
