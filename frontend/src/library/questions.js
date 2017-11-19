@@ -21,17 +21,6 @@ export const questions = [
 		correctAnswerIndex: 0,
 	},
 	{
-		question: 'What is true?',
-		answers: [
-			'0 == undefined',
-			'0 == null',
-			'0 >= undefined',
-			'0 >= null',
-			'0 > null',
-		],
-		correctAnswerIndex: 3,
-	},
-	{
 		question: 'What is also a technology?',
 		answers: [
 			'Goethe',
@@ -58,14 +47,5 @@ export const questions = [
 			'stack overflow',
 		],
 		correctAnswerIndex: 2,
-	},
-	{
-		question: 'What is a popular pattern for web applications?',
-		answers: [
-			'MVC',
-			'CVM',
-			'MCV',
-		],
-		correctAnswerIndex: 0,
 	},
 ];
