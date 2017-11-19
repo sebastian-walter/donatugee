@@ -4,7 +4,7 @@ import {
 	getRefugee,
 	retrieveChallengesForDonator,
 	createChallengeForDonator,
-	doAcceptApplicant
+	doAcceptApplicant, createProfile,
 } from '../app/api/api';
 
 export const createCompany = ({state, commit}, data) => {
@@ -62,6 +62,17 @@ export const acceptApplicant = ({state, commit}, data) => {
 		if (response.status !== 200) {
 			return response;
 		}
+		return response;
+	})
+};
+
+export const doCreateProfile = ({state, commit}, data) => {
+	return createProfile(data).then((response) => {
+		if (response.status !== 200) {
+			return response;
+		}
+
+		commit('REFUGEE_PROFILE_CREATED', response.data);
 		return response;
 	})
 };
