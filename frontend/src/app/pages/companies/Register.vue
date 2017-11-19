@@ -31,6 +31,12 @@
                         required
                         multi-line
                 ></v-text-field>
+                <v-text-field
+                        name="Password"
+                        label="Password"
+                        v-model="password"
+                        required
+                ></v-text-field>
                 <v-btn class="full-width"
                        small
                        color="primary"
@@ -74,6 +80,7 @@
                 company: '',
                 address: '',
                 website: '',
+                password: '',
 			}
 		},
 		methods: {
@@ -82,11 +89,11 @@
             ]),
             signUp() {
 				this.createCompany({
-					name: this.name,
+					name: this.companyName,
 					email: this.email,
 					password: this.password,
                     website: this.website,
-                    address: this.website,
+                    address: this.address,
 				}).then(response => {
 					if (response.status !== 200) {
 						this.errorMessage = 'There is already an account with this email address. Please try to login';

@@ -62,12 +62,18 @@
             	if (this.$route.path === '/your-challenges') {
             		return true;
                 }
+                if (this.challenge.Applications === null) {
+            		return false;
+                }
                 return (this.challenge.Applications.filter((application) => {
                     return application.TechfugeeID === parseInt(this.userId);
                 }).length > 0);
             },
 
             accepted() {
+				if (this.challenge.Applications === null) {
+					return false;
+				}
                 return (this.challenge.Applications.filter((application) => {
                     return (application.TechfugeeID === parseInt(this.userId)) && application.Accepted === true;
                 }).length > 0);

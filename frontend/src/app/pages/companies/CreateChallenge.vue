@@ -121,8 +121,6 @@
 						return;
 					}
 
-					window.localStorage.setItem('companyId', response.data.ID);
-
 					return this.$router.push({
 						path: '/company/your-challenges',
 					});
