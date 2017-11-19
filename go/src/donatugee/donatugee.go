@@ -148,6 +148,16 @@ func (d *Donatugee) ChallengesByTechfugee(idTechfugee string) ([]Challenge, []er
 
 	var challenges []Challenge
 	errs = d.db.Find(&challenges, "id IN (?)", ids).GetErrors()
+
+	applicationMap := make(map[uint][]Application)
+	for _, e := range applications {
+		applicationMap[e.ChallengeID] = append(applicationMap[e.ChallengeID], e)
+	}
+
+	for i := range challenges {
+		challenges[i].Applications = applicationMap[challenges[i].ID]
+	}
+
 	return challenges, errs
 
 }
