@@ -34,6 +34,7 @@
 </template>
 <script>
 	import {getTechfugee} from '../../api/api';
+	import { mapActions } from 'vuex';
 
 	export default {
 		name: 'Profile',
@@ -60,19 +61,19 @@
 			});
 		},
 		methods: {
+            ...mapActions([
+            	'logoutRefugee',
+            ]),
 			logout() {
 				window.localStorage.removeItem('idChallenge');
 				window.localStorage.removeItem('userId');
-				window.localStorage.removeItem('email');
-				window.localStorage.removeItem('name');
-				window.localStorage.removeItem('skills');
 				window.localStorage.removeItem('wrongAnswers');
-				window.localStorage.removeItem('city');
-				window.localStorage.removeItem('introduction');
 				window.localStorage.removeItem('authenticated');
+				this.logoutRefugee();
 				this.$router.push({
 					path: '/',
 				});
+
 			},
 		},
 	};

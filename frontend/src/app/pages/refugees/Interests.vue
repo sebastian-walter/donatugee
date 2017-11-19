@@ -54,6 +54,10 @@
 						value: false,
 					},
 					{
+						name: 'Machine Learning',
+						value: false,
+					},
+					{
 						name: 'C',
 						value: false,
 					},

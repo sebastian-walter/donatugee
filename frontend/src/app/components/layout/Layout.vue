@@ -1,7 +1,7 @@
 <template>
     <v-app id="donatugee">
         <v-navigation-drawer
-                v-if="isLoggedIn"
+                v-if="isLoggedIn && !isRefugee"
                 fixed
                 v-model="drawer"
                 right
@@ -33,7 +33,7 @@
                 <router-link :to="{ path: '/' }"><img src="../../../assets/logo.svg"></router-link>
             </div>
             <v-spacer></v-spacer>
-            <v-toolbar-side-icon v-if="isLoggedIn" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
+            <v-toolbar-side-icon v-if="isLoggedIn && !isRefugee" @click.stop="drawer = !drawer"></v-toolbar-side-icon>
         </v-toolbar>
         <v-content>
             <v-container fluid fill-height>
@@ -45,7 +45,7 @@
             </v-container>
         </v-content>
         <v-card>
-            <v-bottom-nav v-if="isLoggedIn && companyId === null" fixed :value="true" color="white">
+            <v-bottom-nav v-if="isLoggedIn && isRefugee" fixed :value="true" color="white">
                 <v-btn :class="getClass('/challenges')" :to="{path:'/challenges'}" flat color="primary">
                     <span>Home</span>
                     <v-icon>home</v-icon>
@@ -54,13 +54,8 @@
                     <span>Your Challenges</span>
                     <v-icon>star</v-icon>
                 </v-btn>
-                <v-btn v-if="showRefugeeProfile" :class="getClass('/refugee/profile/')"
+                <v-btn v-if="isLoggedIn" :class="getClass('/refugee/profile/')"
                        :to="{path:'/refugee/profile/' + refugeeId}" flat color="primary">
-                    <span>Profile</span>
-                    <v-icon>person</v-icon>
-                </v-btn>
-                <v-btn v-if="companyId" :class="getClass('/company/profile/')"
-                       :to="{path:'/company/profile/' + refugeeId}" flat color="primary">
                     <span>Profile</span>
                     <v-icon>person</v-icon>
                 </v-btn>
@@ -83,21 +78,9 @@
 		},
 		computed: {
 			...mapState({
-				isLoggedInManually: state => state.isLoggedIn,
+				isLoggedIn: state => state.isLoggedIn,
+                isRefugee: state => state.isRefugee,
 			}),
-			isLoggedIn() {
-				if (this.loggedOut) {
-					return false;
-                }
-				if (!this.isLoggedInManually) {
-					return true;
-				}
-				if ((this.refugeeId !== null && typeof this.refugeeId !== 'undefined') ||
-					(this.companyId !== null && this.companyId !== 'undefined')) {
-					return true;
-				}
-				return false;
-			},
 			refugeeId() {
 				return JSON.parse(localStorage.getItem('userId'));
 			},
@@ -113,6 +96,7 @@
 			...mapActions([
 				'getRefugeeData',
 				'getDonatorData',
+                'logoutCompany',
 			]),
 			getClass(path) {
 				let classes = [];
@@ -125,7 +109,7 @@
 				window.localStorage.removeItem('companyId');
 				window.localStorage.removeItem('userId');
 				window.localStorage.removeItem('wrongAnswers');
-				this.loggedOut = false;
+                this.logoutCompany();
 				this.$router.push({
 					path: '/',
 				});

@@ -14,7 +14,7 @@ export const createCompany = ({state, commit}, data) => {
 		}
 		commit('COMPANY_CREATED', response.data);
 		return response;
-	})
+	});
 };
 
 export const getDonatorData = ({state, commit}, data) => {
@@ -24,7 +24,7 @@ export const getDonatorData = ({state, commit}, data) => {
 		}
 		commit('DONATOR_RETRIEVED', response.data);
 		return response;
-	})
+	});
 };
 
 export const getRefugeeData = ({state, commit}, data) => {
@@ -34,7 +34,7 @@ export const getRefugeeData = ({state, commit}, data) => {
 		}
 		commit('REFUGEE_RETRIEVED', response.data);
 		return response;
-	})
+	});
 };
 
 export const getChallengesForDonator = ({state, commit}, data) => {
@@ -44,7 +44,7 @@ export const getChallengesForDonator = ({state, commit}, data) => {
 		}
 		commit('DONATOR_CHALLENGES_RETRIEVED', response.data);
 		return response;
-	})
+	});
 };
 
 export const createChallenge = ({state, commit}, data) => {
@@ -54,7 +54,7 @@ export const createChallenge = ({state, commit}, data) => {
 		}
 		commit('DONATOR_CHALLENGES_RETRIEVED', response.data);
 		return response;
-	})
+	});
 };
 
 export const acceptApplicant = ({state, commit}, data) => {
@@ -63,7 +63,7 @@ export const acceptApplicant = ({state, commit}, data) => {
 			return response;
 		}
 		return response;
-	})
+	});
 };
 
 export const doCreateProfile = ({state, commit}, data) => {
@@ -74,5 +74,13 @@ export const doCreateProfile = ({state, commit}, data) => {
 
 		commit('REFUGEE_PROFILE_CREATED', response.data);
 		return response;
-	})
+	});
+};
+
+export const logoutRefugee = ({state, commit}, data) => {
+	commit('REFUGEE_LOGGED_OUT');
+};
+
+export const logoutCompany = ({state, commit}, data) => {
+	commit('COMPANY_LOGGED_OUT');
 };

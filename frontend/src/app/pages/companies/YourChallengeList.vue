@@ -1,27 +1,29 @@
 <template>
     <div>
-        <v-alert v-if="errorMessage !== ''" color="error" icon="warning" value="true">
-            {{ this.errorMessage }}
-        </v-alert>
-        <h1 class="mb-4 display-1">Your Challenges
-            <v-btn class="create-challenge"
-                   color="error"
-                   fab
-                   dark
-                   to="/company/challenge/create"
-            >
-                <v-icon>add</v-icon>
-            </v-btn>
-        </h1>
-        <p class="mb-4" v-html="randomText.text_out"></p>
-        <v-alert v-if="companyChallenges.length === 0" color="info" value="true">
-            You don't have any yet. Go create some!! Hush hush!!
-        </v-alert>
-        <template v-for="challenge in companyChallenges">
-            <challenge-item :challenge="challenge" class="challenge-item"></challenge-item>
-        </template>
-        <div class="create-challenge">
-        </div>
+        <v-flex xs12 sm6 offset-sm3>
+            <v-alert v-if="errorMessage !== ''" color="error" icon="warning" value="true">
+                {{ this.errorMessage }}
+            </v-alert>
+            <h1 class="mb-4 display-1">Your Challenges
+                <v-btn class="create-challenge"
+                       color="error"
+                       fab
+                       dark
+                       to="/company/challenge/create"
+                >
+                    <v-icon>add</v-icon>
+                </v-btn>
+            </h1>
+            <p class="mb-4" v-html="randomText.text_out"></p>
+            <v-alert v-if="companyChallenges.length === 0" color="info" value="true">
+                You don't have any yet. Go create some!! Hush hush!!
+            </v-alert>
+            <template v-for="challenge in companyChallenges">
+                <challenge-item :challenge="challenge" class="challenge-item"></challenge-item>
+            </template>
+            <div class="create-challenge">
+            </div>
+        </v-flex>
     </div>
 </template>
 <script>
