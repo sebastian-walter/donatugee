@@ -65,13 +65,33 @@
 </template>
 
 <script>
+    import { mapActions, mapState } from 'vuex';
+
 	export default {
 		name: 'Layout',
 		data: () => ({
 			drawer: false,
-			companyId: window.localStorage.getItem('userIdCompany'),
 		}),
-		methods: {
+		props: {
+			source: String,
+		},
+		computed: {
+			refugeeId() {
+				return localStorage.getItem('userId');
+			},
+			companyId: () => window.localStorage.getItem('userIdCompany'),
+			showRefugeeProfile() {
+				if (this.refugeeId !== null && typeof this.refugeeId !== 'undefined') {
+					return true;
+				}
+				return false;
+			},
+		},
+        methods: {
+            ...mapActions([
+            	'getRefugeeData',
+				'getDonatorData',
+            ]),
 			getClass(path) {
 				let classes = [];
 				if (this.$route.path === path) {
@@ -80,40 +100,27 @@
 				return classes;
 			},
 			logout() {
-				window.localStorage.removeItem('idChallenge');
+				window.localStorage.removeItem('companyId');
 				window.localStorage.removeItem('userId');
-				window.localStorage.removeItem('email');
-				window.localStorage.removeItem('name');
-				window.localStorage.removeItem('skills');
 				window.localStorage.removeItem('wrongAnswers');
-				window.localStorage.removeItem('authenticated');
 				this.$router.push({
 					path: '/',
 				});
 			},
-		},
-		props: {
-			source: String,
-		},
-		computed: {
-			refugeeId() {
-				return localStorage.getItem('userId');
-			},
-			showRefugeeProfile() {
-				if (this.refugeeId !== null && typeof this.refugeeId !== 'undefined') {
-					return true;
-				}
-				return false;
-			},
-		},
+        },
 		mounted() {
-			if (this.refugeeId !== null && typeof this.refugeeId !== 'undefined') {
-				return true;
+			debugger;
+			if (this.refugeeId !== null) {
+				this.getRefugeeData({ id: this.refugeeId });
+				return;
 			}
-			if (this.refugeeId)
-				},
+			if (this.companyId !== null) {
+                this.getDonatorData({ id: this.companyId });
+			}
+		},
 	};
 </script>
+
 <style lang="scss" type="text/scss">
     .app-container {
         margin-bottom: 2.5rem;
