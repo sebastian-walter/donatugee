@@ -10,7 +10,7 @@ import mutations from './mutations';
 
 const state = {
 	company: null,
-	companyChallenges: null,
+	companyChallenges: [],
 };
 
 const store = {
