@@ -90,7 +90,33 @@ func (d *Donatugee) Techfugees() ([]Techfugee, []error) {
 
 func (d *Donatugee) ChallengesByDonator(id string) ([]Challenge, []error) {
 	var challenges []Challenge
-	return challenges, d.db.Find(&challenges, "donator_id = ?", id).GetErrors()
+	errs := d.db.Find(&challenges, "donator_id = ?", id).GetErrors()
+	if len(errs) != 0 {
+		return []Challenge{}, errs
+	}
+
+	ids := []uint{}
+	for _, e := range challenges {
+		ids = append(ids, e.ID)
+	}
+
+	var applications []Application
+	errs = d.db.Find(&applications, "challenge_id IN (?)", ids).GetErrors()
+	if len(errs) != 0 {
+		return []Challenge{}, errs
+	}
+
+	applicationMap := make(map[uint][]Application)
+	for _, e := range applications {
+		applicationMap[e.ChallengeID] = append(applicationMap[e.ChallengeID], e)
+	}
+
+	for i := range challenges {
+		challenges[i].Applications = applicationMap[challenges[i].ID]
+	}
+
+	return challenges, errs
+
 }
 
 func (d *Donatugee) UpdateAuth(id string, passed string) (Techfugee, []error) {
