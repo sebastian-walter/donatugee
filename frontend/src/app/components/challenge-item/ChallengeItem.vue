@@ -1,9 +1,11 @@
 <template>
     <div class="mb-4 challenge-item">
         <v-flex xs12>
-            <v-card :to="{ path: 'challenge/' + challenge.ID }" :class="applied">
+            <v-card :to="{ path: 'challenge/' + challenge.ID }">
                 <v-card-title>
-                    <div>
+                    <div class="card-title">
+                        <icon v-if="!accepted && applied" class="applied-icon" name="hourglass-o"></icon>
+                        <icon v-if="accepted && applied" class="check-icon green--text" name="check"></icon>
                         <h3 class="headline mb-2">{{ challenge.Name }}</h3>
                         <p>{{ challenge.Description }}</p>
                         <v-chip color="orange" text-color="white">
@@ -27,7 +29,7 @@
                     </v-flex>
                     <v-flex xs9 offset-xs1>
                         <h3 class="mb-0">{{ donator.Name }}</h3>
-                        <div>Düsseldorf, Germany</div>
+                        <div>{{ donator.Address }}</div>
                     </v-flex>
                 </v-card-title>
             </v-card>
@@ -37,6 +39,7 @@
 
 <script>
     import { getDonator } from '../../api/api';
+
 
     export default {
         name: 'ChallengeItem',
@@ -61,8 +64,14 @@
                 }
                 return (this.challenge.Applications.filter((application) => {
                     return application.TechfugeeID === parseInt(this.userId);
-                }).length > 0) ? 'applied' : '';
-            }
+                }).length > 0);
+            },
+
+            accepted() {
+                return (this.challenge.Applications.filter((application) => {
+                    return (application.TechfugeeID === parseInt(this.userId)) && application.Accepted === true;
+                }).length > 0);
+            },
         }
     }
 </script>
@@ -70,7 +79,13 @@
 <style scoped lang="scss" text="text/scss">
     @import '../../../assets/_variables.scss';
 
-    .card.applied {
-        background-color: $grey-lighter;
+    .card {
+        position: relative;
+    }
+
+    .applied-icon, .check-icon {
+        position: absolute;
+        top: 16px;
+        right: 16px;
     }
 </style>
