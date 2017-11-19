@@ -16,7 +16,7 @@
         <v-layout>
             <v-flex xs12>
                 <p>{{ techfugee.Introduction }}</p>
-                <v-chip v-for="skill in JSON.parse(techfugee.Skills)" key="skill" color="indigo" text-color="white">
+                <v-chip v-for="skill in skills" key="skill" color="indigo" text-color="white">
                     <v-icon left>code</v-icon>
                     {{ skill }}
                 </v-chip>
