@@ -51,7 +51,7 @@
                        small
                        dark
                        large
-                       @click="signUp"
+                       @click="login"
                 >
                     Login
                 </v-btn>
@@ -88,6 +88,11 @@
             ...mapActions([
             	'createCompany',
             ]),
+            login() {
+                this.$router.push({
+                    path: '/companies/login',
+                });
+            },
             signUp() {
 				this.createCompany({
 					name: this.companyName,
