@@ -44,6 +44,7 @@ func (s *Server) start() error {
 	mux.HandleFunc("/api/v1/update-techfugee", s.updateTechfugee)
 	mux.HandleFunc("/api/v1/insert-application", s.insertApplication)
 	mux.HandleFunc("/api/v1/application-by-techfugee", s.applicationByTechfugee)
+	mux.HandleFunc("/api/v1/challenges-by-donator", s.challengesByDonator)
 
 	mux.Handle("/public", http.FileServer(http.Dir("./frontend/public")))
 	mux.Handle("/dist", http.FileServer(http.Dir("./frontend/dist")))
@@ -63,7 +64,6 @@ func IndexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request
 }
 
 func (s *Server) applicationByTechfugee(resp http.ResponseWriter, r *http.Request) {
-	// _, _ = resp.Write([]byte("foo"))
 	idTechfugee := r.FormValue("id")
 
 	applications, errs := s.donatugee.ChallengesByTechfugee(idTechfugee)
@@ -133,6 +133,22 @@ func (s *Server) updateTechfugee(resp http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
 		return
+	}
+
+	_, _ = resp.Write(js)
+}
+
+func (s *Server) challengesByDonator(resp http.ResponseWriter, r *http.Request) {
+	id := r.FormValue("id")
+	challenges, errs := s.donatugee.ChallengesByDonator(id)
+	if len(errs) != 0 {
+		http.Error(resp, fmt.Sprintf("query: %v", errs), http.StatusInternalServerError)
+		return
+	}
+
+	js, err := json.Marshal(challenges)
+	if err != nil {
+		http.Error(resp, fmt.Sprintf("marshal: %v", err), http.StatusInternalServerError)
 	}
 
 	_, _ = resp.Write(js)

@@ -83,7 +83,11 @@ func (d *Donatugee) Techfugees() ([]Techfugee, []error) {
 	var techfugees []Techfugee
 	errs := d.db.Preload("Applications").Find(&techfugees).GetErrors()
 	return techfugees, errs
+}
 
+func (d *Donatugee) ChallengesByDonator(id string) ([]Challenge, []error) {
+	var challenges []Challenge
+	return challenges, d.db.Find(&challenges, "donator_id = ?", id).GetErrors()
 }
 
 func (d *Donatugee) UpdateAuth(id string, passed string) (Techfugee, []error) {
