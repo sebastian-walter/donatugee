@@ -25,6 +25,14 @@
                         required
                 ></v-checkbox>
                 <v-text-field
+                        v-if="hardwareProvidede"
+                        name="laptopType"
+                        label="What kind of hard"
+                        v-model="couponValue"
+                        type="number"
+                        required
+                ></v-text-field>
+                <v-text-field
                         name="couponValue"
                         label="What is the amount of the Udemy coupon"
                         v-model="couponValue"
@@ -57,7 +65,6 @@
 	import { mapActions, mapState } from 'vuex';
 
 	export default {
-		components: {VCheckbox},
 		name: 'CreateChallenge',
 		data () {
 			return {
