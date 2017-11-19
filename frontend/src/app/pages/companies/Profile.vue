@@ -3,7 +3,7 @@
         <v-layout mb-4>
             <v-flex xs4>
                 <v-avatar size="90px" class="grey lighten-4">
-                    <img src="https://lorempixel.com/180/180/cats/" alt="avatar">
+                    <img :src="'https://lorempixel.com/180/180/cats/' + (donator.ID%10)" alt="avatar">
                 </v-avatar>
             </v-flex>
 

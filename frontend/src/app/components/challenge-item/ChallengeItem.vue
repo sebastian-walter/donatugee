@@ -24,7 +24,7 @@
                         <v-avatar
                                 class="grey lighten-4"
                         >
-                            <img :src="'https://lorempixel.com/' + (180 + challenge.ID) + '/' + (180 + challenge.ID) + '/people/'" alt="avatar">
+                            <img :src="'https://lorempixel.com/' + (180 + challenge.ID) + '/' + (180 + challenge.ID) + '/people/' + (challenge.ID%10)" alt="avatar">
                         </v-avatar>
                     </v-flex>
                     <v-flex xs9 offset-xs1>
