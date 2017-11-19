@@ -108,7 +108,7 @@ func (d *Donatugee) ChallengesByTechfugee(idTechfugee string) ([]Challenge, []er
 		return nil, errs
 	}
 
-	ids := []uint{}
+	var ids []uint
 	for _, e := range applications {
 		ids = append(ids, e.ChallengeID)
 	}
@@ -127,7 +127,10 @@ func (d *Donatugee) Challenges() ([]Challenge, []error) {
 
 func (d *Donatugee) Techfugee(id string) (Techfugee, []error) {
 	var techfugee Techfugee
-	newID, _ := strconv.Atoi(id)
+	newID, err := strconv.Atoi(id)
+	if err != nil {
+		return techfugee, []error{err}
+	}
 	errs := d.db.Preload("Applications").First(&techfugee, "id = ?", newID).GetErrors()
 	return techfugee, errs
 }
