@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 class="mb-2">Challenge {{ challenge.Name }}</h1>
+        <h1 class="headline mb-2">{{ challenge.Name }}</h1>
         <h3 class="mb-2">powered by {{ donator.Name }}</h3>
 
         <p class="mb-4">{{ challenge.Description }}</p>
