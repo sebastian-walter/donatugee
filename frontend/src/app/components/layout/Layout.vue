@@ -25,9 +25,9 @@
                 </v-list-tile>
             </v-list>
         </v-navigation-drawer>
-        <v-toolbar color="light-blue darken-4" dark fixed app>
+        <v-toolbar color="blue accent-4" dark fixed app>
+            <div class="logo"><router-link :to="{ path: '/' }"><img src="../../../assets/logo.svg"></router-link></div>
             <v-spacer></v-spacer>
-            <v-toolbar-title>HackFugee</v-toolbar-title>
             <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
         </v-toolbar>
         <v-content>
@@ -124,5 +124,16 @@
 <style lang="scss" type="text/scss">
     .app-container {
         margin-bottom: 2.5rem;
+    }
+
+    .logo {
+        height: 100%;
+        padding: 10px 0;
+
+        img {
+            display: block;
+            width: auto;
+            height: 100%;
+        }
     }
 </style>
