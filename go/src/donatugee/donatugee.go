@@ -135,6 +135,12 @@ func (d *Donatugee) Techfugee(id string) (Techfugee, []error) {
 	return techfugee, errs
 }
 
+func (d *Donatugee) LoginDonator(email string) (Donator, []error) {
+	var donator Donator
+	errs := d.db.Preload("Applications").First(&donator, "email = ?", email).GetErrors()
+	return donator, errs
+}
+
 func (d *Donatugee) LoginTechfugee(email string) (Techfugee, []error) {
 	var techfugee Techfugee
 	errs := d.db.Preload("Applications").First(&techfugee, "email = ?", email).GetErrors()
@@ -212,12 +218,12 @@ func (d *Donatugee) InsertApplication(techfugee, challenge string) (Application,
 
 	newID1, err := strconv.Atoi(techfugee)
 	if err != nil {
-		return applications, []error{err}
+		return Application{}, []error{err}
 	}
 
 	newID2, err := strconv.Atoi(challenge)
 	if err != nil {
-		return applications, []error{err}
+		return Application{}, []error{err}
 	}
 
 	errs := d.db.Find(&applications, "techfugee_id = ? AND challenge_id = ?", newID1, newID2).GetErrors()
